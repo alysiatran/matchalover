@@ -16,6 +16,14 @@ export interface MenuCategory {
   items: MenuItem[];
 }
 
+export interface MatchaPowder {
+  origin: string;
+  grade: string;
+  flavorNotes: string[];
+  body: string;
+  finish: string;
+}
+
 export interface Cafe {
   id: string;
   name: string;
@@ -28,6 +36,7 @@ export interface Cafe {
   description: string;
   hours: string;
   priceRange: string;
+  matchaPowder: MatchaPowder;
   menu: MenuCategory[];
 }
 
@@ -42,6 +51,7 @@ export const cafes: Cafe[] = [
     address: "1st Ave, Pike Place Market",
     tags: ["Ceremonial", "Organic"],
     description: "A serene matcha bar tucked inside Pike Place Market, sourcing ceremonial-grade powder directly from Uji, Kyoto.",
+    matchaPowder: { origin: "Uji, Kyoto", grade: "Ceremonial", flavorNotes: ["Umami", "Sweet", "Creamy"], body: "Full & velvety", finish: "Lingering sweetness" },
     hours: "7:00 AM – 5:00 PM",
     priceRange: "$$",
     menu: [
@@ -66,6 +76,7 @@ export const cafes: Cafe[] = [
     address: "412 Broadway E, Capitol Hill",
     tags: ["Cozy", "Plant-based"],
     description: "A plant-filled Capitol Hill gem offering creative matcha lattes and vegan pastries in a warm, minimalist space.",
+    matchaPowder: { origin: "Nishio, Aichi", grade: "Premium", flavorNotes: ["Vegetal", "Nutty", "Grassy"], body: "Medium & smooth", finish: "Clean, slightly astringent" },
     hours: "7:30 AM – 7:00 PM",
     priceRange: "$",
     menu: [
@@ -90,6 +101,7 @@ export const cafes: Cafe[] = [
     address: "601 S Jackson St, International District",
     tags: ["Desserts", "Modern"],
     description: "Where traditional matcha meets modern patisserie. Known for their matcha mochi waffles and seasonal specials.",
+    matchaPowder: { origin: "Kagoshima", grade: "Ceremonial A", flavorNotes: ["Earthy", "Rich", "Chocolate"], body: "Dense & bold", finish: "Deep roasted undertone" },
     hours: "9:00 AM – 8:00 PM",
     priceRange: "$$$",
     menu: [
@@ -114,6 +126,7 @@ export const cafes: Cafe[] = [
     address: "5520 University Way NE, U-District",
     tags: ["Traditional", "Garden"],
     description: "A tranquil tea house near UW campus offering authentic Japanese tea ceremonies and stone-ground matcha bowls.",
+    matchaPowder: { origin: "Uji, Kyoto", grade: "Ceremonial", flavorNotes: ["Umami", "Floral", "Buttery"], body: "Silky & delicate", finish: "Elegant, long-lasting sweetness" },
     hours: "10:00 AM – 5:00 PM",
     priceRange: "$$",
     menu: [
@@ -138,6 +151,7 @@ export const cafes: Cafe[] = [
     address: "2030 Westlake Ave, South Lake Union",
     tags: ["Trendy", "Specialty"],
     description: "A sleek SLU matcha bar serving creative concoctions from classic usucha to matcha espresso tonics.",
+    matchaPowder: { origin: "Shizuoka", grade: "Premium", flavorNotes: ["Bright", "Vegetal", "Citrus"], body: "Light & crisp", finish: "Refreshing, clean bite" },
     hours: "8:00 AM – 9:00 PM",
     priceRange: "$$",
     menu: [
@@ -162,6 +176,7 @@ export const cafes: Cafe[] = [
     address: "3401 Fremont Ave N, Fremont",
     tags: ["Iced Drinks", "Casual"],
     description: "Fremont's go-to for iced matcha creations with oat, almond, and coconut milk. Perfect for PNW summer days.",
+    matchaPowder: { origin: "Yame, Fukuoka", grade: "Culinary+", flavorNotes: ["Nutty", "Earthy", "Toasty"], body: "Robust & hearty", finish: "Warm, roasted grain notes" },
     hours: "7:00 AM – 8:00 PM",
     priceRange: "$",
     menu: [

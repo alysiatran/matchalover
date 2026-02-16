@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Star, MapPin, Clock, Heart, Share2 } from "lucide-react";
+import { ArrowLeft, Star, MapPin, Clock, Heart, Share2, Leaf } from "lucide-react";
 import { cafes } from "@/data/cafes";
 import { useState } from "react";
 
@@ -74,6 +74,42 @@ const CafeDetail = () => {
         <div>
           <h2 className="font-display text-lg font-semibold text-foreground mb-2">About</h2>
           <p className="text-sm leading-relaxed text-muted-foreground font-body">{cafe.description}</p>
+        </div>
+
+        {/* Matcha Powder Profile */}
+        <div>
+          <h2 className="font-display text-lg font-semibold text-foreground mb-3 flex items-center gap-2">
+            <Leaf className="w-5 h-5 text-primary" />
+            Matcha Profile
+          </h2>
+          <div className="bg-card rounded-xl border border-border p-4 space-y-3">
+            <div className="flex justify-between items-center">
+              <span className="text-xs font-body text-muted-foreground uppercase tracking-wide">Origin</span>
+              <span className="text-sm font-body font-medium text-foreground">{cafe.matchaPowder.origin}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-xs font-body text-muted-foreground uppercase tracking-wide">Grade</span>
+              <span className="text-sm font-body font-medium text-primary">{cafe.matchaPowder.grade}</span>
+            </div>
+            <div className="flex justify-between items-start">
+              <span className="text-xs font-body text-muted-foreground uppercase tracking-wide">Flavor Notes</span>
+              <div className="flex flex-wrap gap-1.5 justify-end">
+                {cafe.matchaPowder.flavorNotes.map((note) => (
+                  <span key={note} className="text-xs font-body font-medium bg-matcha-light text-accent-foreground px-2.5 py-1 rounded-full">
+                    {note}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-xs font-body text-muted-foreground uppercase tracking-wide">Body</span>
+              <span className="text-sm font-body text-foreground">{cafe.matchaPowder.body}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-xs font-body text-muted-foreground uppercase tracking-wide">Finish</span>
+              <span className="text-sm font-body text-foreground">{cafe.matchaPowder.finish}</span>
+            </div>
+          </div>
         </div>
 
         <div>

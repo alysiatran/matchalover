@@ -5,6 +5,17 @@ import cafe4 from "@/assets/cafe-4.jpg";
 import cafe5 from "@/assets/cafe-5.jpg";
 import cafe6 from "@/assets/cafe-6.jpg";
 
+export interface MenuItem {
+  name: string;
+  price: string;
+  description?: string;
+}
+
+export interface MenuCategory {
+  category: string;
+  items: MenuItem[];
+}
+
 export interface Cafe {
   id: string;
   name: string;
@@ -17,6 +28,7 @@ export interface Cafe {
   description: string;
   hours: string;
   priceRange: string;
+  menu: MenuCategory[];
 }
 
 export const cafes: Cafe[] = [
@@ -32,6 +44,17 @@ export const cafes: Cafe[] = [
     description: "A serene matcha bar tucked inside Pike Place Market, sourcing ceremonial-grade powder directly from Uji, Kyoto.",
     hours: "7:00 AM – 5:00 PM",
     priceRange: "$$",
+    menu: [
+      { category: "Matcha Drinks", items: [
+        { name: "Ceremonial Matcha Bowl", price: "$6", description: "Stone-ground Uji matcha, whisked to order" },
+        { name: "Matcha Latte", price: "$5.50", description: "Oat or whole milk" },
+        { name: "Iced Matcha Americano", price: "$5", description: "Matcha shot over ice water" },
+      ]},
+      { category: "Pastries", items: [
+        { name: "Matcha Scone", price: "$4" },
+        { name: "Black Sesame Mochi", price: "$3.50" },
+      ]},
+    ],
   },
   {
     id: "2",
@@ -45,6 +68,17 @@ export const cafes: Cafe[] = [
     description: "A plant-filled Capitol Hill gem offering creative matcha lattes and vegan pastries in a warm, minimalist space.",
     hours: "7:30 AM – 7:00 PM",
     priceRange: "$",
+    menu: [
+      { category: "Matcha Drinks", items: [
+        { name: "Classic Matcha Latte", price: "$5", description: "Oat, almond, or coconut milk" },
+        { name: "Lavender Matcha", price: "$6", description: "House lavender syrup with matcha" },
+        { name: "Matcha Horchata", price: "$6.50" },
+      ]},
+      { category: "Vegan Bites", items: [
+        { name: "Matcha Banana Bread", price: "$4.50" },
+        { name: "Bliss Ball Trio", price: "$5" },
+      ]},
+    ],
   },
   {
     id: "3",
@@ -58,6 +92,17 @@ export const cafes: Cafe[] = [
     description: "Where traditional matcha meets modern patisserie. Known for their matcha mochi waffles and seasonal specials.",
     hours: "9:00 AM – 8:00 PM",
     priceRange: "$$$",
+    menu: [
+      { category: "Matcha Drinks", items: [
+        { name: "Premium Matcha Latte", price: "$7", description: "Single-origin Kagoshima matcha" },
+        { name: "Matcha Espresso Fusion", price: "$7.50" },
+      ]},
+      { category: "Desserts", items: [
+        { name: "Matcha Mochi Waffle", price: "$12", description: "Signature crispy mochi waffle with matcha cream" },
+        { name: "Matcha Tiramisu", price: "$10" },
+        { name: "Houjicha Crème Brûlée", price: "$9" },
+      ]},
+    ],
   },
   {
     id: "4",
@@ -71,6 +116,17 @@ export const cafes: Cafe[] = [
     description: "A tranquil tea house near UW campus offering authentic Japanese tea ceremonies and stone-ground matcha bowls.",
     hours: "10:00 AM – 5:00 PM",
     priceRange: "$$",
+    menu: [
+      { category: "Tea Ceremony", items: [
+        { name: "Full Tea Ceremony", price: "$18", description: "Includes wagashi and two bowls of matcha" },
+        { name: "Koicha (Thick Matcha)", price: "$8" },
+        { name: "Usucha (Thin Matcha)", price: "$6" },
+      ]},
+      { category: "Wagashi", items: [
+        { name: "Seasonal Mochi Set", price: "$7" },
+        { name: "Dorayaki", price: "$4.50" },
+      ]},
+    ],
   },
   {
     id: "5",
@@ -84,6 +140,17 @@ export const cafes: Cafe[] = [
     description: "A sleek SLU matcha bar serving creative concoctions from classic usucha to matcha espresso tonics.",
     hours: "8:00 AM – 9:00 PM",
     priceRange: "$$",
+    menu: [
+      { category: "Signature Drinks", items: [
+        { name: "Matcha Espresso Tonic", price: "$7", description: "Matcha shot, espresso, tonic water" },
+        { name: "Yuzu Matcha Fizz", price: "$6.50" },
+        { name: "Dirty Matcha", price: "$6", description: "Matcha latte with a shot of espresso" },
+      ]},
+      { category: "Classics", items: [
+        { name: "Usucha Bowl", price: "$5" },
+        { name: "Iced Matcha Latte", price: "$5.50" },
+      ]},
+    ],
   },
   {
     id: "6",
@@ -97,6 +164,17 @@ export const cafes: Cafe[] = [
     description: "Fremont's go-to for iced matcha creations with oat, almond, and coconut milk. Perfect for PNW summer days.",
     hours: "7:00 AM – 8:00 PM",
     priceRange: "$",
+    menu: [
+      { category: "Iced Matcha", items: [
+        { name: "Classic Iced Matcha", price: "$5", description: "Choice of oat, almond, or coconut milk" },
+        { name: "Strawberry Matcha", price: "$6" },
+        { name: "Mango Matcha Smoothie", price: "$7" },
+      ]},
+      { category: "Snacks", items: [
+        { name: "Matcha Soft Serve", price: "$5" },
+        { name: "Rice Crispy Treat", price: "$3" },
+      ]},
+    ],
   },
 ];
 

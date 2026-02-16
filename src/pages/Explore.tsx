@@ -1,10 +1,11 @@
 import { useState, useMemo } from "react";
-import { cafes } from "@/data/cafes";
+import { useCafes } from "@/hooks/useCafes";
 import SearchBar from "@/components/SearchBar";
 import CafeCard from "@/components/CafeCard";
 
 const Explore = () => {
   const [search, setSearch] = useState("");
+  const { data: cafes = [] } = useCafes();
 
   const filtered = useMemo(() => {
     if (!search) return cafes;

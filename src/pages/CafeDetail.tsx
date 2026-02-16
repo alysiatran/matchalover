@@ -90,6 +90,31 @@ const CafeDetail = () => {
           </div>
         </div>
 
+        {/* Menu */}
+        <div>
+          <h2 className="font-display text-lg font-semibold text-foreground mb-3">Menu</h2>
+          <div className="space-y-4">
+            {cafe.menu.map((section) => (
+              <div key={section.category} className="bg-card rounded-xl border border-border p-4">
+                <h3 className="font-display text-sm font-semibold text-foreground mb-3 uppercase tracking-wide">{section.category}</h3>
+                <div className="space-y-3">
+                  {section.items.map((item) => (
+                    <div key={item.name} className="flex justify-between items-start gap-3">
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-body font-medium text-foreground">{item.name}</p>
+                        {item.description && (
+                          <p className="text-xs font-body text-muted-foreground mt-0.5">{item.description}</p>
+                        )}
+                      </div>
+                      <span className="text-sm font-body font-semibold text-primary shrink-0">{item.price}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
         <button className="w-full py-4 rounded-2xl bg-primary text-primary-foreground font-body font-semibold text-sm hover:opacity-90 transition-opacity active:scale-[0.98]">
           Get Directions
         </button>

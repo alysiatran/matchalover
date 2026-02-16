@@ -25,7 +25,7 @@ const CafeDetail = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-foreground/30 via-transparent to-background" />
 
         <button
-          onClick={() => navigate(-1)}
+          onClick={() => window.history.length > 1 ? navigate(-1) : navigate("/")}
           className="absolute top-12 left-4 w-10 h-10 rounded-full bg-background/70 backdrop-blur-sm flex items-center justify-center transition-all hover:bg-background"
         >
           <ArrowLeft className="w-5 h-5 text-foreground" />

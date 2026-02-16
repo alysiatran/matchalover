@@ -1,11 +1,12 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Star, MapPin, Clock, Heart, Share2, Leaf } from "lucide-react";
-import { cafes } from "@/data/cafes";
+import { useCafes } from "@/hooks/useCafes";
 import { useState } from "react";
 
 const CafeDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { data: cafes = [] } = useCafes();
   const cafe = cafes.find((c) => c.id === id);
   const [liked, setLiked] = useState(false);
 

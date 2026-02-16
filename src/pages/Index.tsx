@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { MapPin } from "lucide-react";
-import { cafes, categories } from "@/data/cafes";
+import { categories } from "@/data/cafes";
+import { useCafes } from "@/hooks/useCafes";
 import SearchBar from "@/components/SearchBar";
 import CategoryChips from "@/components/CategoryChips";
 import CafeCard from "@/components/CafeCard";
@@ -9,6 +10,7 @@ import heroImage from "@/assets/matcha-hero.jpg";
 const Index = () => {
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
+  const { data: cafes = [] } = useCafes();
 
   const filtered = useMemo(() => {
     let result = cafes;

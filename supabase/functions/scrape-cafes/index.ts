@@ -27,9 +27,8 @@ Deno.serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        query: 'new matcha cafe openings Seattle WA 2025 site:yelp.com OR site:google.com/maps menu prices reviews',
-        limit: 10,
-        tbs: 'qdr:m',
+        query: 'Grean Matcha OR "Mina\'s Matcha" OR matcha cafe Seattle WA site:yelp.com OR site:google.com/maps menu prices reviews',
+        limit: 15,
         scrapeOptions: {
           formats: ['markdown'],
         },
@@ -73,7 +72,7 @@ Deno.serve(async (req) => {
         messages: [
           {
             role: 'system',
-            content: `You extract real matcha cafe data from web content. Return a JSON array of exactly 6 cafes found in Seattle. Each cafe must be a REAL place mentioned in the content. Use this exact schema:
+            content: `You extract real matcha cafe data from web content. Return a JSON array of cafes found in Seattle. IMPORTANT: You MUST include "Grean Matcha" and "Mina's Matcha" if they appear in the content. Return up to 8 cafes total. Each cafe must be a REAL place mentioned in the content. Use this exact schema:
 {
   "name": "string (real cafe name)",
   "rating": "number (from reviews or estimate 4.0-4.9)",

@@ -132,8 +132,8 @@ const CafeDetail = () => {
             <div className="flex justify-between items-start">
               <span className="text-xs font-body text-muted-foreground uppercase tracking-wide">Flavor Notes</span>
               <div className="flex flex-wrap gap-1.5 justify-end">
-                {cafe.matchaPowder.flavorNotes.map((note) => (
-                  <span key={note} className="text-xs font-body font-medium bg-matcha-light text-accent-foreground px-2.5 py-1 rounded-full">
+                {cafe.matchaPowder.flavorNotes.map((note, index) => (
+                  <span key={`${note}-${index}`} className="text-xs font-body font-medium bg-matcha-light text-accent-foreground px-2.5 py-1 rounded-full">
                     {note}
                   </span>
                 ))}

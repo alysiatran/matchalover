@@ -32,7 +32,7 @@ const Index = () => {
       );
     }
     return result;
-  }, [search, activeCategory]);
+  }, [search, activeCategory, cafes]);
 
   return (
     <div className="min-h-screen bg-background pb-24">

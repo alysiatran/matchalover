@@ -14,7 +14,69 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      cafes: {
+        Row: {
+          address: string
+          created_at: string
+          description: string | null
+          distance: string | null
+          hours: string | null
+          id: string
+          matcha_body: string | null
+          matcha_finish: string | null
+          matcha_flavor_notes: string[] | null
+          matcha_grade: string | null
+          matcha_origin: string | null
+          menu: Json | null
+          name: string
+          price_range: string | null
+          rating: number | null
+          reviews: number | null
+          tags: string[] | null
+          updated_at: string
+        }
+        Insert: {
+          address: string
+          created_at?: string
+          description?: string | null
+          distance?: string | null
+          hours?: string | null
+          id?: string
+          matcha_body?: string | null
+          matcha_finish?: string | null
+          matcha_flavor_notes?: string[] | null
+          matcha_grade?: string | null
+          matcha_origin?: string | null
+          menu?: Json | null
+          name: string
+          price_range?: string | null
+          rating?: number | null
+          reviews?: number | null
+          tags?: string[] | null
+          updated_at?: string
+        }
+        Update: {
+          address?: string
+          created_at?: string
+          description?: string | null
+          distance?: string | null
+          hours?: string | null
+          id?: string
+          matcha_body?: string | null
+          matcha_finish?: string | null
+          matcha_flavor_notes?: string[] | null
+          matcha_grade?: string | null
+          matcha_origin?: string | null
+          menu?: Json | null
+          name?: string
+          price_range?: string | null
+          rating?: number | null
+          reviews?: number | null
+          tags?: string[] | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

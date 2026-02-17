@@ -63,7 +63,6 @@ const EventCard = ({ event, index }: EventCardProps) => {
             <MapPin className="w-3.5 h-3.5 shrink-0" />
             <span className="text-xs font-body">
               {event.cafe_name || event.venue}
-              {event.address && ` · ${event.address}`}
             </span>
           </div>
         </div>

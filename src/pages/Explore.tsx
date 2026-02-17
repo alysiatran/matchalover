@@ -14,27 +14,48 @@ const Explore = () => {
   const { data: events = [], isLoading: eventsLoading } = useEvents();
 
   const filteredCafes = useMemo(() => {
-    if (!search) return cafes;
-    const q = search.toLowerCase();
-    return cafes.filter(
-      (c) =>
-        c.name.toLowerCase().includes(q) ||
-        c.tags.some((t) => t.toLowerCase().includes(q)) ||
-        c.address.toLowerCase().includes(q)
-    );
+    // Deduplicate by name (keep highest rated)
+    const seen = new Map<string, typeof cafes[0]>();
+    for (const c of cafes) {
+      const key = c.name.toLowerCase();
+      const existing = seen.get(key);
+      if (!existing || c.rating > existing.rating) seen.set(key, c);
+    }
+    let result = Array.from(seen.values());
+
+    if (search) {
+      const q = search.toLowerCase();
+      result = result.filter(
+        (c) =>
+          c.name.toLowerCase().includes(q) ||
+          c.tags.some((t) => t.toLowerCase().includes(q)) ||
+          c.address.toLowerCase().includes(q)
+      );
+    }
+    return result;
   }, [search, cafes]);
 
   const filteredEvents = useMemo(() => {
-    if (!search) return events;
-    const q = search.toLowerCase();
-    return events.filter(
-      (e) =>
-        e.title.toLowerCase().includes(q) ||
-        (e.cafe_name || "").toLowerCase().includes(q) ||
-        e.venue.toLowerCase().includes(q) ||
-        e.tags.some((t) => t.toLowerCase().includes(q)) ||
-        (e.description || "").toLowerCase().includes(q)
-    );
+    // Deduplicate events by title + venue
+    const seen = new Map<string, typeof events[0]>();
+    for (const e of events) {
+      const key = `${e.title.toLowerCase()}|${e.venue.toLowerCase()}`;
+      if (!seen.has(key)) seen.set(key, e);
+    }
+    let result = Array.from(seen.values());
+
+    if (search) {
+      const q = search.toLowerCase();
+      result = result.filter(
+        (e) =>
+          e.title.toLowerCase().includes(q) ||
+          (e.cafe_name || "").toLowerCase().includes(q) ||
+          e.venue.toLowerCase().includes(q) ||
+          e.tags.some((t) => t.toLowerCase().includes(q)) ||
+          (e.description || "").toLowerCase().includes(q)
+      );
+    }
+    return result;
   }, [search, events]);
 
   return (

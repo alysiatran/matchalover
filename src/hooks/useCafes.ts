@@ -68,10 +68,22 @@ function mapDbCafe(row: DbCafe, index: number): Cafe {
   };
 }
 
-async function fetchCafesFromDb(): Promise<Cafe[]> {
+/** Extract city keywords from a location string like "Seattle, WA" or "98101" */
+function locationToFilter(location: string): string {
+  // If it looks like a zip code, use as-is
+  if (/^\d{5}(-\d{4})?$/.test(location.trim())) return location.trim();
+  // Take the city part (before comma)
+  const city = location.split(",")[0].trim();
+  return city;
+}
+
+async function fetchCafesFromDb(location: string): Promise<Cafe[]> {
+  const filter = locationToFilter(location);
+
   const { data, error } = await supabase
     .from("cafes")
     .select("*")
+    .ilike("address", `%${filter}%`)
     .order("rating", { ascending: false });
 
   if (error) {
@@ -80,41 +92,44 @@ async function fetchCafesFromDb(): Promise<Cafe[]> {
   }
 
   if (!data || data.length === 0) {
-    throw new Error("No cafes in database yet");
+    throw new Error(`No cafes found for "${location}"`);
   }
 
   return (data as unknown as DbCafe[]).map(mapDbCafe);
 }
 
-export function useCafes() {
+export function useCafes(location: string = "Seattle, WA") {
   const queryClient = useQueryClient();
 
   const query = useQuery<Cafe[]>({
-    queryKey: ["cafes-seattle"],
-    queryFn: fetchCafesFromDb,
-    staleTime: 1000 * 60 * 5, // 5 min
+    queryKey: ["cafes", location],
+    queryFn: () => fetchCafesFromDb(location),
+    staleTime: 1000 * 60 * 5,
     placeholderData: fallbackCafes,
     retry: 1,
   });
 
-  // Trigger a background scrape to find new cafes
+  // Trigger a background scrape for the current location
   useEffect(() => {
-    const lastScrape = localStorage.getItem("lastScrapeTime");
+    const scrapeKey = `lastScrapeTime_${location}`;
+    const lastScrape = localStorage.getItem(scrapeKey);
     const now = Date.now();
     const thirtyMinutes = 30 * 60 * 1000;
 
     if (!lastScrape || now - parseInt(lastScrape) > thirtyMinutes) {
-      localStorage.setItem("lastScrapeTime", String(now));
-      supabase.functions.invoke("scrape-cafes").then(({ error }) => {
+      localStorage.setItem(scrapeKey, String(now));
+      supabase.functions.invoke("scrape-cafes", {
+        body: { location },
+      }).then(({ error }) => {
         if (error) {
           console.error("Background scrape error:", error);
         } else {
-          console.log("Background scrape complete, refreshing data");
-          queryClient.invalidateQueries({ queryKey: ["cafes-seattle"] });
+          console.log("Background scrape complete for", location);
+          queryClient.invalidateQueries({ queryKey: ["cafes", location] });
         }
       });
     }
-  }, [queryClient]);
+  }, [queryClient, location]);
 
   return query;
 }

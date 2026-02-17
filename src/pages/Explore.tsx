@@ -16,7 +16,7 @@ const Explore = () => {
         c.tags.some((t) => t.toLowerCase().includes(q)) ||
         c.address.toLowerCase().includes(q)
     );
-  }, [search]);
+  }, [search, cafes]);
 
   return (
     <div className="min-h-screen bg-background pb-24 pt-14">

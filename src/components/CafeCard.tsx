@@ -1,6 +1,9 @@
 import { Star, MapPin } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import type { Cafe } from "@/data/cafes";
+import cafe1 from "@/assets/cafe-1.jpg";
+
+const fallbackImage = cafe1;
 
 interface CafeCardProps {
   cafe: Cafe;
@@ -22,6 +25,7 @@ const CafeCard = ({ cafe, index }: CafeCardProps) => {
           alt={cafe.name}
           className="w-full h-full object-cover"
           loading="lazy"
+          onError={(e) => { e.currentTarget.src = fallbackImage; }}
         />
         <div className="absolute top-3 right-3 bg-background/80 backdrop-blur-sm rounded-full px-2.5 py-1 flex items-center gap-1">
           <Star className="w-3.5 h-3.5 text-primary fill-primary" />

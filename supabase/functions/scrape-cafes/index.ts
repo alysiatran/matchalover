@@ -135,15 +135,38 @@ Return ONLY the JSON array, no markdown fencing.`
           },
           body: JSON.stringify({
             query: `${cafe.name} Seattle cafe`,
-            limit: 2,
+            limit: 3,
+            scrapeOptions: { formats: ['markdown'] },
           }),
         });
         const photoData = await photoSearch.json();
         const results = photoData?.data || [];
+
+        // Try multiple strategies to find a good image
         for (const result of results) {
+          // Strategy 1: og:image from metadata
           const ogImage = result?.metadata?.ogImage || result?.metadata?.['og:image'];
-          if (ogImage && ogImage.startsWith('http')) {
+          if (ogImage && ogImage.startsWith('http') && !ogImage.includes('placeholder') && !ogImage.includes('yelp_og_image') && !ogImage.includes('logo')) {
             cafe.photoUrl = ogImage;
+            return;
+          }
+          // Strategy 2: sourceURL image from Yelp bphoto
+          const sourceUrl = result?.metadata?.sourceURL || result?.url || '';
+          if (sourceUrl.includes('yelp.com')) {
+            const ogImg2 = result?.metadata?.ogImage || result?.metadata?.['og:image'];
+            if (ogImg2 && ogImg2.startsWith('http')) {
+              cafe.photoUrl = ogImg2;
+              return;
+            }
+          }
+        }
+
+        // Strategy 3: Extract image URLs from markdown content
+        for (const result of results) {
+          const md = result?.markdown || '';
+          const imgMatch = md.match(/!\[.*?\]\((https?:\/\/[^\s)]+\.(?:jpg|jpeg|png|webp)[^\s)]*)\)/i);
+          if (imgMatch) {
+            cafe.photoUrl = imgMatch[1];
             return;
           }
         }

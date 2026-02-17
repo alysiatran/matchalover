@@ -19,7 +19,9 @@ const Index = () => {
       result = result.filter(
         (c) =>
           c.name.toLowerCase().includes(q) ||
-          c.tags.some((t) => t.toLowerCase().includes(q))
+          c.tags.some((t) => t.toLowerCase().includes(q)) ||
+          c.address.toLowerCase().includes(q) ||
+          c.description.toLowerCase().includes(q)
       );
     }
     if (activeCategory === "Nearby") {

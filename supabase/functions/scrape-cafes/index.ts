@@ -25,8 +25,9 @@ Deno.serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        query: 'best matcha cafes Seattle WA 2025 menu prices reviews',
+        query: 'new matcha cafe openings Seattle WA 2025 site:yelp.com OR site:google.com/maps menu prices reviews',
         limit: 10,
+        tbs: 'qdr:m',
         scrapeOptions: {
           formats: ['markdown'],
         },

@@ -1,3 +1,5 @@
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
@@ -46,7 +48,7 @@ Deno.serve(async (req) => {
 
     console.log('Search successful, results:', searchData?.data?.length || 0);
 
-    // Now use AI to extract structured cafe data from the search results
+    // Use AI to extract structured cafe data
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
     if (!LOVABLE_API_KEY) {
       return new Response(
@@ -55,9 +57,8 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Combine the markdown from search results
     const combinedContent = (searchData.data || [])
-      .map((r: { title?: string; url?: string; markdown?: string }) => 
+      .map((r: { title?: string; url?: string; markdown?: string }) =>
         `Source: ${r.title || r.url}\n${r.markdown || ''}`)
       .join('\n\n---\n\n');
 
@@ -74,7 +75,6 @@ Deno.serve(async (req) => {
             role: 'system',
             content: `You extract real matcha cafe data from web content. Return a JSON array of exactly 6 cafes found in Seattle. Each cafe must be a REAL place mentioned in the content. Use this exact schema:
 {
-  "id": "string (1-6)",
   "name": "string (real cafe name)",
   "rating": "number (from reviews or estimate 4.0-4.9)",
   "reviews": "number (from reviews or estimate 100-400)",
@@ -111,11 +111,9 @@ Return ONLY the JSON array, no markdown fencing.`
 
     const aiData = await aiResponse.json();
     const content = aiData.choices?.[0]?.message?.content || '';
-    
-    // Parse the JSON from AI response
+
     let cafes;
     try {
-      // Try to extract JSON from response (handle potential markdown fencing)
       const jsonMatch = content.match(/\[[\s\S]*\]/);
       cafes = jsonMatch ? JSON.parse(jsonMatch[0]) : JSON.parse(content);
     } catch (parseError) {
@@ -126,8 +124,46 @@ Return ONLY the JSON array, no markdown fencing.`
       );
     }
 
+    // Persist cafes to database using service role
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+    let savedCount = 0;
+    for (const cafe of cafes) {
+      const row = {
+        name: cafe.name,
+        address: cafe.address,
+        rating: cafe.rating,
+        reviews: cafe.reviews,
+        distance: cafe.distance,
+        tags: cafe.tags || [],
+        description: cafe.description,
+        hours: cafe.hours,
+        price_range: cafe.priceRange,
+        matcha_origin: cafe.matchaPowder?.origin,
+        matcha_grade: cafe.matchaPowder?.grade,
+        matcha_flavor_notes: cafe.matchaPowder?.flavorNotes || [],
+        matcha_body: cafe.matchaPowder?.body,
+        matcha_finish: cafe.matchaPowder?.finish,
+        menu: cafe.menu || [],
+      };
+
+      const { error: upsertError } = await supabase
+        .from('cafes')
+        .upsert(row, { onConflict: 'name,address' });
+
+      if (upsertError) {
+        console.error('Upsert error for', cafe.name, upsertError);
+      } else {
+        savedCount++;
+      }
+    }
+
+    console.log(`Saved ${savedCount} cafes to database`);
+
     return new Response(
-      JSON.stringify({ success: true, cafes }),
+      JSON.stringify({ success: true, scraped: cafes.length, saved: savedCount }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   } catch (error) {

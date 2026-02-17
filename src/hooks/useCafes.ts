@@ -33,12 +33,20 @@ interface DbCafe {
   created_at: string;
 }
 
+function isGoodPhoto(url: string): boolean {
+  const lower = url.toLowerCase();
+  const reject = ['logo', 'icon', 'avatar', 'favicon', 'placeholder', 'badge', 'sprite', 'pixel', 'widget', 'social', 'button', 'arrow', 'chevron', 'emoji', '1x1'];
+  if (reject.some(p => lower.includes(p))) return false;
+  if (lower.endsWith('.svg')) return false;
+  return true;
+}
+
 function mapDbCafe(row: DbCafe, index: number): Cafe {
   return {
     id: row.id,
     name: row.name,
-    image: row.photo_url || images[index % images.length],
-    photos: row.photos || [],
+    image: row.photo_url && isGoodPhoto(row.photo_url) ? row.photo_url : images[index % images.length],
+    photos: (row.photos || []).filter(isGoodPhoto),
     rating: row.rating,
     reviews: row.reviews,
     distance: row.distance,

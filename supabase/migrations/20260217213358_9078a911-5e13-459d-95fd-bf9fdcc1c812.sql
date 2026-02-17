@@ -1,0 +1,1 @@
+ALTER TABLE public.cafes ADD COLUMN matcha_grams text DEFAULT NULL;

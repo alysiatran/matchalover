@@ -88,7 +88,8 @@ Deno.serve(async (req) => {
     "grade": "string (Ceremonial, Premium, etc.)",
     "flavorNotes": ["string array, 3 notes"],
     "body": "string (e.g. 'Full & velvety')",
-    "finish": "string (e.g. 'Lingering sweetness')"
+    "finish": "string (e.g. 'Lingering sweetness')",
+    "grams": "string (grams of matcha per serving if mentioned in the content, e.g. '2g' for thin tea, '4g' for thick tea. Use null if not explicitly stated in the source material)"
   },
    "menu": [
     {
@@ -217,6 +218,7 @@ Return ONLY the JSON array, no markdown fencing.`
         matcha_flavor_notes: cafe.matchaPowder?.flavorNotes || [],
         matcha_body: cafe.matchaPowder?.body,
         matcha_finish: cafe.matchaPowder?.finish,
+        matcha_grams: cafe.matchaPowder?.grams || null,
         menu: cafe.menu || [],
         photos: cafe.photos || [],
       };

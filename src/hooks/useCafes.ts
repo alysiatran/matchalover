@@ -27,6 +27,7 @@ interface DbCafe {
   matcha_flavor_notes: string[];
   matcha_body: string;
   matcha_finish: string;
+  matcha_grams: string | null;
   menu: any[];
   photo_url: string | null;
   photos: string[] | null;
@@ -61,6 +62,7 @@ function mapDbCafe(row: DbCafe, index: number): Cafe {
       flavorNotes: row.matcha_flavor_notes || [],
       body: row.matcha_body,
       finish: row.matcha_finish,
+      grams: (row.matcha_grams && row.matcha_grams !== 'unknown') ? row.matcha_grams : undefined,
     },
     menu: row.menu || [],
   };

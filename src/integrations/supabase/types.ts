@@ -26,6 +26,7 @@ export type Database = {
           matcha_finish: string | null
           matcha_flavor_notes: string[] | null
           matcha_grade: string | null
+          matcha_grams: string | null
           matcha_origin: string | null
           menu: Json | null
           name: string
@@ -48,6 +49,7 @@ export type Database = {
           matcha_finish?: string | null
           matcha_flavor_notes?: string[] | null
           matcha_grade?: string | null
+          matcha_grams?: string | null
           matcha_origin?: string | null
           menu?: Json | null
           name: string
@@ -70,6 +72,7 @@ export type Database = {
           matcha_finish?: string | null
           matcha_flavor_notes?: string[] | null
           matcha_grade?: string | null
+          matcha_grams?: string | null
           matcha_origin?: string | null
           menu?: Json | null
           name?: string

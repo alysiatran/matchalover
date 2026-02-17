@@ -80,6 +80,63 @@ export type Database = {
         }
         Relationships: []
       }
+      matcha_events: {
+        Row: {
+          address: string | null
+          cafe_name: string | null
+          created_at: string
+          description: string | null
+          event_date: string | null
+          event_end_date: string | null
+          event_time: string | null
+          id: string
+          image_url: string | null
+          price: string | null
+          source: string | null
+          tags: string[] | null
+          title: string
+          updated_at: string
+          url: string | null
+          venue: string
+        }
+        Insert: {
+          address?: string | null
+          cafe_name?: string | null
+          created_at?: string
+          description?: string | null
+          event_date?: string | null
+          event_end_date?: string | null
+          event_time?: string | null
+          id?: string
+          image_url?: string | null
+          price?: string | null
+          source?: string | null
+          tags?: string[] | null
+          title: string
+          updated_at?: string
+          url?: string | null
+          venue: string
+        }
+        Update: {
+          address?: string | null
+          cafe_name?: string | null
+          created_at?: string
+          description?: string | null
+          event_date?: string | null
+          event_end_date?: string | null
+          event_time?: string | null
+          id?: string
+          image_url?: string | null
+          price?: string | null
+          source?: string | null
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+          url?: string | null
+          venue?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

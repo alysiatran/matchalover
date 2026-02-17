@@ -19,7 +19,16 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Search for matcha cafes in Seattle
+    // Accept location from request body, default to Seattle
+    let location = 'Seattle, WA';
+    try {
+      const body = await req.json();
+      if (body?.location) location = body.location;
+    } catch { /* no body, use default */ }
+
+    console.log('Scraping matcha cafes for location:', location);
+
+    // Search for matcha cafes in the given location
     const searchResponse = await fetch('https://api.firecrawl.dev/v1/search', {
       method: 'POST',
       headers: {
@@ -27,7 +36,7 @@ Deno.serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        query: 'Grean Matcha OR "Mina\'s Matcha" OR matcha cafe Seattle WA site:yelp.com OR site:google.com/maps menu prices reviews',
+        query: `matcha cafe "${location}" menu prices reviews site:yelp.com OR site:google.com/maps`,
         limit: 15,
         scrapeOptions: {
           formats: ['markdown'],
@@ -72,13 +81,13 @@ Deno.serve(async (req) => {
         messages: [
           {
             role: 'system',
-            content: `You extract real matcha cafe data from web content. Return a JSON array of cafes found in Seattle. IMPORTANT: You MUST include "Grean Matcha" and "Mina's Matcha" if they appear in the content. Return up to 8 cafes total. Each cafe must be a REAL place mentioned in the content. Use this exact schema:
+            content: `You extract real matcha cafe data from web content. Return a JSON array of cafes found in or near "${location}". Return up to 8 cafes total. Each cafe must be a REAL place mentioned in the content. Use this exact schema:
 {
   "name": "string (real cafe name)",
   "rating": "number (from reviews or estimate 4.0-4.9)",
   "reviews": "number (from reviews or estimate 100-400)",
   "distance": "string (e.g. '0.5 mi')",
-  "address": "string (real Seattle address)",
+  "address": "string (real address including city and state)",
   "tags": ["string array, 2-3 tags like Ceremonial, Cozy, Modern, Traditional, etc."],
   "description": "string (2 sentences about the cafe)",
   "hours": "string (e.g. '7:00 AM – 5:00 PM')",
@@ -102,7 +111,7 @@ Return ONLY the JSON array, no markdown fencing.`
           },
           {
             role: 'user',
-            content: `Extract real Seattle matcha cafe data from this content:\n\n${combinedContent.slice(0, 15000)}`
+            content: `Extract real matcha cafe data near "${location}" from this content:\n\n${combinedContent.slice(0, 15000)}`
           }
         ],
         temperature: 0.3,
@@ -136,17 +145,14 @@ Return ONLY the JSON array, no markdown fencing.`
         'map-marker', 'pin-icon', 'star-rating', 'rating',
       ];
       if (rejectPatterns.some(p => lower.includes(p))) return false;
-      // Reject tiny images (common in filenames like 50x50, 16x16)
       if (/\b\d{1,2}x\d{1,2}\b/.test(lower)) return false;
-      // Reject SVGs (usually icons/logos)
       if (lower.endsWith('.svg')) return false;
-      // Reject very short filenames (often icons)
       const filename = lower.split('/').pop() || '';
       if (filename.length < 8) return false;
       return true;
     };
 
-    // Fetch real photos for each cafe in parallel using Firecrawl search
+    // Fetch real photos for each cafe in parallel
     await Promise.allSettled(cafes.map(async (cafe: any) => {
       const allPhotos: string[] = [];
       try {
@@ -157,7 +163,7 @@ Return ONLY the JSON array, no markdown fencing.`
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            query: `${cafe.name} Seattle cafe photos food drinks menu`,
+            query: `${cafe.name} ${location} cafe photos food drinks menu`,
             limit: 5,
             scrapeOptions: { formats: ['markdown'] },
           }),
@@ -166,13 +172,11 @@ Return ONLY the JSON array, no markdown fencing.`
         const results = photoData?.data || [];
 
         for (const result of results) {
-          // Collect og:image
           const ogImage = result?.metadata?.ogImage || result?.metadata?.['og:image'];
           if (ogImage && ogImage.startsWith('http') && isGoodPhoto(ogImage)) {
             if (!allPhotos.includes(ogImage)) allPhotos.push(ogImage);
           }
 
-          // Extract all image URLs from markdown
           const md = result?.markdown || '';
           const imgRegex = /!\[.*?\]\((https?:\/\/[^\s)]+\.(?:jpg|jpeg|png|webp)[^\s)]*)\)/gi;
           let match;
@@ -185,7 +189,6 @@ Return ONLY the JSON array, no markdown fencing.`
           }
         }
 
-        // Set primary photo
         if (allPhotos.length > 0 && !cafe.photoUrl) {
           cafe.photoUrl = allPhotos[0];
         }
@@ -196,7 +199,7 @@ Return ONLY the JSON array, no markdown fencing.`
       }
     }));
 
-    // Persist cafes to database using service role
+    // Persist cafes to database
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
@@ -238,10 +241,10 @@ Return ONLY the JSON array, no markdown fencing.`
       }
     }
 
-    console.log(`Saved ${savedCount} cafes to database`);
+    console.log(`Saved ${savedCount} cafes for "${location}"`);
 
     return new Response(
-      JSON.stringify({ success: true, scraped: cafes.length, saved: savedCount }),
+      JSON.stringify({ success: true, location, scraped: cafes.length, saved: savedCount }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   } catch (error) {

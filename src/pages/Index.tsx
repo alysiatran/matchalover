@@ -1,16 +1,18 @@
 import { useState, useMemo } from "react";
-import { MapPin } from "lucide-react";
 import { categories } from "@/data/cafes";
 import { useCafes } from "@/hooks/useCafes";
+import { useLocation } from "@/hooks/useLocation";
 import SearchBar from "@/components/SearchBar";
 import CategoryChips from "@/components/CategoryChips";
 import CafeCard from "@/components/CafeCard";
+import LocationPicker from "@/components/LocationPicker";
 import heroImage from "@/assets/matcha-hero.jpg";
 
 const Index = () => {
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
-  const { data: cafes = [] } = useCafes();
+  const { location, setLocation } = useLocation();
+  const { data: cafes = [] } = useCafes(location);
 
   const filtered = useMemo(() => {
     // Deduplicate by name (keep highest rated)
@@ -60,9 +62,8 @@ const Index = () => {
           <h1 className="font-display text-3xl font-bold text-primary-foreground drop-shadow-lg">
             Matcha Moments
           </h1>
-          <div className="flex items-center gap-1 mt-1 text-primary-foreground/80">
-            <MapPin className="w-3.5 h-3.5" />
-            <span className="text-sm font-body">Seattle, WA</span>
+          <div className="mt-1">
+            <LocationPicker location={location} onLocationChange={setLocation} variant="hero" />
           </div>
         </div>
       </div>
@@ -84,7 +85,7 @@ const Index = () => {
 
         {filtered.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-muted-foreground font-body">No cafes found. Try a different search.</p>
+            <p className="text-muted-foreground font-body">No cafes found. Try a different search or location.</p>
           </div>
         )}
       </div>

@@ -1,16 +1,19 @@
 import { useState, useMemo } from "react";
 import { useCafes } from "@/hooks/useCafes";
 import { useEvents } from "@/hooks/useEvents";
+import { useLocation } from "@/hooks/useLocation";
 import SearchBar from "@/components/SearchBar";
 import CafeCard from "@/components/CafeCard";
 import EventCard from "@/components/EventCard";
+import LocationPicker from "@/components/LocationPicker";
 
 type Tab = "cafes" | "events";
 
 const Explore = () => {
   const [search, setSearch] = useState("");
   const [activeTab, setActiveTab] = useState<Tab>("cafes");
-  const { data: cafes = [] } = useCafes();
+  const { location, setLocation } = useLocation();
+  const { data: cafes = [] } = useCafes(location);
   const { data: events = [], isLoading: eventsLoading } = useEvents();
 
   const filteredCafes = useMemo(() => {
@@ -61,7 +64,10 @@ const Explore = () => {
   return (
     <div className="min-h-screen bg-background pb-24 pt-14">
       <div className="px-5 space-y-5">
-        <h1 className="font-display text-2xl font-bold text-foreground">Explore</h1>
+        <div className="flex items-center justify-between">
+          <h1 className="font-display text-2xl font-bold text-foreground">Explore</h1>
+          <LocationPicker location={location} onLocationChange={setLocation} variant="inline" />
+        </div>
         <SearchBar value={search} onChange={setSearch} />
 
         {/* Tab bar */}

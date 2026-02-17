@@ -23,6 +23,7 @@ export interface MatchaPowder {
   flavorNotes: string[];
   body: string;
   finish: string;
+  grams?: string;
 }
 
 export interface Cafe {

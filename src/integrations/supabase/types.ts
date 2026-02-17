@@ -29,6 +29,7 @@ export type Database = {
           matcha_origin: string | null
           menu: Json | null
           name: string
+          photo_url: string | null
           price_range: string | null
           rating: number | null
           reviews: number | null
@@ -49,6 +50,7 @@ export type Database = {
           matcha_origin?: string | null
           menu?: Json | null
           name: string
+          photo_url?: string | null
           price_range?: string | null
           rating?: number | null
           reviews?: number | null
@@ -69,6 +71,7 @@ export type Database = {
           matcha_origin?: string | null
           menu?: Json | null
           name?: string
+          photo_url?: string | null
           price_range?: string | null
           rating?: number | null
           reviews?: number | null

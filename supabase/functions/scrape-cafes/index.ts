@@ -90,10 +90,10 @@ Deno.serve(async (req) => {
     "body": "string (e.g. 'Full & velvety')",
     "finish": "string (e.g. 'Lingering sweetness')"
   },
-  "menu": [
+   "menu": [
     {
       "category": "string",
-      "items": [{ "name": "string", "price": "string like $5", "description": "string (optional)" }]
+      "items": [{ "name": "string", "price": "string like $5", "description": "string (optional)", "imageUrl": "string URL of the menu item photo if found (optional)" }]
     }
   ]
 }
@@ -125,6 +125,7 @@ Return ONLY the JSON array, no markdown fencing.`
 
     // Fetch real photos for each cafe in parallel using Firecrawl search
     await Promise.allSettled(cafes.map(async (cafe: any) => {
+      const allPhotos: string[] = [];
       try {
         const photoSearch = await fetch('https://api.firecrawl.dev/v1/search', {
           method: 'POST',
@@ -133,44 +134,42 @@ Return ONLY the JSON array, no markdown fencing.`
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            query: `${cafe.name} Seattle cafe`,
-            limit: 3,
+            query: `${cafe.name} Seattle cafe photos food drinks menu`,
+            limit: 5,
             scrapeOptions: { formats: ['markdown'] },
           }),
         });
         const photoData = await photoSearch.json();
         const results = photoData?.data || [];
 
-        // Try multiple strategies to find a good image
         for (const result of results) {
-          // Strategy 1: og:image from metadata
+          // Collect og:image
           const ogImage = result?.metadata?.ogImage || result?.metadata?.['og:image'];
           if (ogImage && ogImage.startsWith('http') && !ogImage.includes('placeholder') && !ogImage.includes('yelp_og_image') && !ogImage.includes('logo')) {
-            cafe.photoUrl = ogImage;
-            return;
+            if (!allPhotos.includes(ogImage)) allPhotos.push(ogImage);
           }
-          // Strategy 2: sourceURL image from Yelp bphoto
-          const sourceUrl = result?.metadata?.sourceURL || result?.url || '';
-          if (sourceUrl.includes('yelp.com')) {
-            const ogImg2 = result?.metadata?.ogImage || result?.metadata?.['og:image'];
-            if (ogImg2 && ogImg2.startsWith('http')) {
-              cafe.photoUrl = ogImg2;
-              return;
+
+          // Extract all image URLs from markdown
+          const md = result?.markdown || '';
+          const imgRegex = /!\[.*?\]\((https?:\/\/[^\s)]+\.(?:jpg|jpeg|png|webp)[^\s)]*)\)/gi;
+          let match;
+          while ((match = imgRegex.exec(md)) !== null) {
+            const url = match[1];
+            if (!url.includes('logo') && !url.includes('icon') && !url.includes('avatar') && !allPhotos.includes(url)) {
+              allPhotos.push(url);
             }
+            if (allPhotos.length >= 8) break;
           }
         }
 
-        // Strategy 3: Extract image URLs from markdown content
-        for (const result of results) {
-          const md = result?.markdown || '';
-          const imgMatch = md.match(/!\[.*?\]\((https?:\/\/[^\s)]+\.(?:jpg|jpeg|png|webp)[^\s)]*)\)/i);
-          if (imgMatch) {
-            cafe.photoUrl = imgMatch[1];
-            return;
-          }
+        // Set primary photo
+        if (allPhotos.length > 0 && !cafe.photoUrl) {
+          cafe.photoUrl = allPhotos[0];
         }
+        cafe.photos = allPhotos.slice(0, 8);
       } catch (photoErr) {
         console.error('Photo search failed for', cafe.name, photoErr);
+        cafe.photos = [];
       }
     }));
 
@@ -197,6 +196,7 @@ Return ONLY the JSON array, no markdown fencing.`
         matcha_body: cafe.matchaPowder?.body,
         matcha_finish: cafe.matchaPowder?.finish,
         menu: cafe.menu || [],
+        photos: cafe.photos || [],
       };
 
       if (cafe.photoUrl) {

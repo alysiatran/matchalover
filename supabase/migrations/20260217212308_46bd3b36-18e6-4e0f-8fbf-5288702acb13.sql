@@ -1,0 +1,1 @@
+ALTER TABLE public.cafes ADD COLUMN photos text[] DEFAULT '{}'::text[];

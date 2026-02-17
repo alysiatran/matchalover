@@ -29,6 +29,7 @@ interface DbCafe {
   matcha_finish: string;
   menu: any[];
   photo_url: string | null;
+  photos: string[] | null;
   created_at: string;
 }
 
@@ -37,6 +38,7 @@ function mapDbCafe(row: DbCafe, index: number): Cafe {
     id: row.id,
     name: row.name,
     image: row.photo_url || images[index % images.length],
+    photos: row.photos || [],
     rating: row.rating,
     reviews: row.reviews,
     distance: row.distance,

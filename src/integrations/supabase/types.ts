@@ -30,6 +30,7 @@ export type Database = {
           menu: Json | null
           name: string
           photo_url: string | null
+          photos: string[] | null
           price_range: string | null
           rating: number | null
           reviews: number | null
@@ -51,6 +52,7 @@ export type Database = {
           menu?: Json | null
           name: string
           photo_url?: string | null
+          photos?: string[] | null
           price_range?: string | null
           rating?: number | null
           reviews?: number | null
@@ -72,6 +74,7 @@ export type Database = {
           menu?: Json | null
           name?: string
           photo_url?: string | null
+          photos?: string[] | null
           price_range?: string | null
           rating?: number | null
           reviews?: number | null

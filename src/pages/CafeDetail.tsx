@@ -1,7 +1,8 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Star, MapPin, Clock, Heart, Share2, Leaf } from "lucide-react";
+import { ArrowLeft, Star, MapPin, Clock, Heart, Share2, Leaf, ChevronLeft, ChevronRight } from "lucide-react";
 import { useCafes } from "@/hooks/useCafes";
-import { useState } from "react";
+import { useState, useRef } from "react";
+import cafe1 from "@/assets/cafe-1.jpg";
 
 const CafeDetail = () => {
   const { id } = useParams();
@@ -9,7 +10,12 @@ const CafeDetail = () => {
   const { data: cafes = [] } = useCafes();
   const cafe = cafes.find((c) => c.id === id);
   const [liked, setLiked] = useState(false);
+  const [activePhoto, setActivePhoto] = useState(0);
+  const fallbackImage = cafe1;
 
+  const allPhotos = cafe
+    ? [cafe.image, ...(cafe.photos || [])].filter((url, i, arr) => url && arr.indexOf(url) === i)
+    : [];
   if (!cafe) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
@@ -22,8 +28,39 @@ const CafeDetail = () => {
     <div className="min-h-screen bg-background">
       {/* Image header */}
       <div className="relative h-72 overflow-hidden">
-        <img src={cafe.image} alt={cafe.name} className="w-full h-full object-cover" />
+        <img
+          src={allPhotos[activePhoto] || cafe.image}
+          alt={cafe.name}
+          className="w-full h-full object-cover transition-opacity duration-300"
+          onError={(e) => { e.currentTarget.src = fallbackImage; }}
+        />
         <div className="absolute inset-0 bg-gradient-to-b from-foreground/30 via-transparent to-background" />
+
+        {allPhotos.length > 1 && (
+          <>
+            <button
+              onClick={() => setActivePhoto((p) => (p - 1 + allPhotos.length) % allPhotos.length)}
+              className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-background/60 backdrop-blur-sm flex items-center justify-center"
+            >
+              <ChevronLeft className="w-4 h-4 text-foreground" />
+            </button>
+            <button
+              onClick={() => setActivePhoto((p) => (p + 1) % allPhotos.length)}
+              className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-background/60 backdrop-blur-sm flex items-center justify-center"
+            >
+              <ChevronRight className="w-4 h-4 text-foreground" />
+            </button>
+            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
+              {allPhotos.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setActivePhoto(i)}
+                  className={`w-2 h-2 rounded-full transition-all ${i === activePhoto ? "bg-primary-foreground scale-125" : "bg-primary-foreground/50"}`}
+                />
+              ))}
+            </div>
+          </>
+        )}
 
         <button
           onClick={() => window.history.length > 1 ? navigate(-1) : navigate("/")}
@@ -136,14 +173,24 @@ const CafeDetail = () => {
                 <h3 className="font-display text-sm font-semibold text-foreground mb-3 uppercase tracking-wide">{section.category}</h3>
                 <div className="space-y-3">
                   {section.items.map((item) => (
-                    <div key={item.name} className="flex justify-between items-start gap-3">
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-body font-medium text-foreground">{item.name}</p>
-                        {item.description && (
-                          <p className="text-xs font-body text-muted-foreground mt-0.5">{item.description}</p>
-                        )}
+                    <div key={item.name} className="flex items-start gap-3">
+                      {item.imageUrl && (
+                        <img
+                          src={item.imageUrl}
+                          alt={item.name}
+                          className="w-16 h-16 rounded-lg object-cover shrink-0"
+                          onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                        />
+                      )}
+                      <div className="flex-1 min-w-0 flex justify-between items-start gap-3">
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-body font-medium text-foreground">{item.name}</p>
+                          {item.description && (
+                            <p className="text-xs font-body text-muted-foreground mt-0.5">{item.description}</p>
+                          )}
+                        </div>
+                        <span className="text-sm font-body font-semibold text-primary shrink-0">{item.price}</span>
                       </div>
-                      <span className="text-sm font-body font-semibold text-primary shrink-0">{item.price}</span>
                     </div>
                   ))}
                 </div>

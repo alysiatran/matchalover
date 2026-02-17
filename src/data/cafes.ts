@@ -9,6 +9,7 @@ export interface MenuItem {
   name: string;
   price: string;
   description?: string;
+  imageUrl?: string;
 }
 
 export interface MenuCategory {
@@ -28,6 +29,7 @@ export interface Cafe {
   id: string;
   name: string;
   image: string;
+  photos: string[];
   rating: number;
   reviews: number;
   distance: string;
@@ -45,6 +47,7 @@ export const cafes: Cafe[] = [
     id: "1",
     name: "Matcha Magic",
     image: cafe1,
+    photos: [],
     rating: 4.8,
     reviews: 312,
     distance: "0.3 mi",
@@ -70,6 +73,7 @@ export const cafes: Cafe[] = [
     id: "2",
     name: "Maru Matcha",
     image: cafe2,
+    photos: [],
     rating: 4.7,
     reviews: 245,
     distance: "0.5 mi",
@@ -95,6 +99,7 @@ export const cafes: Cafe[] = [
     id: "3",
     name: "Midori Café",
     image: cafe3,
+    photos: [],
     rating: 4.9,
     reviews: 389,
     distance: "1.1 mi",
@@ -120,6 +125,7 @@ export const cafes: Cafe[] = [
     id: "4",
     name: "Zen Garden Tea",
     image: cafe4,
+    photos: [],
     rating: 4.6,
     reviews: 178,
     distance: "1.8 mi",
@@ -145,6 +151,7 @@ export const cafes: Cafe[] = [
     id: "5",
     name: "Ocha Bar",
     image: cafe5,
+    photos: [],
     rating: 4.5,
     reviews: 298,
     distance: "0.4 mi",
@@ -170,6 +177,7 @@ export const cafes: Cafe[] = [
     id: "6",
     name: "Green Fog",
     image: cafe6,
+    photos: [],
     rating: 4.4,
     reviews: 210,
     distance: "0.9 mi",

@@ -13,7 +13,17 @@ const Index = () => {
   const { data: cafes = [] } = useCafes();
 
   const filtered = useMemo(() => {
-    let result = cafes;
+    // Deduplicate by name (keep highest rated)
+    const seen = new Map<string, typeof cafes[0]>();
+    for (const c of cafes) {
+      const key = c.name.toLowerCase();
+      const existing = seen.get(key);
+      if (!existing || c.rating > existing.rating) {
+        seen.set(key, c);
+      }
+    }
+    let result = Array.from(seen.values());
+
     if (search) {
       const q = search.toLowerCase();
       result = result.filter(

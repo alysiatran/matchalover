@@ -124,6 +124,34 @@ Return ONLY the JSON array, no markdown fencing.`
       );
     }
 
+    // Fetch real photos for each cafe in parallel using Firecrawl search
+    await Promise.allSettled(cafes.map(async (cafe: any) => {
+      try {
+        const photoSearch = await fetch('https://api.firecrawl.dev/v1/search', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${apiKey}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            query: `${cafe.name} Seattle cafe`,
+            limit: 2,
+          }),
+        });
+        const photoData = await photoSearch.json();
+        const results = photoData?.data || [];
+        for (const result of results) {
+          const ogImage = result?.metadata?.ogImage || result?.metadata?.['og:image'];
+          if (ogImage && ogImage.startsWith('http')) {
+            cafe.photoUrl = ogImage;
+            return;
+          }
+        }
+      } catch (photoErr) {
+        console.error('Photo search failed for', cafe.name, photoErr);
+      }
+    }));
+
     // Persist cafes to database using service role
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
@@ -131,7 +159,7 @@ Return ONLY the JSON array, no markdown fencing.`
 
     let savedCount = 0;
     for (const cafe of cafes) {
-      const row = {
+      const row: Record<string, unknown> = {
         name: cafe.name,
         address: cafe.address,
         rating: cafe.rating,
@@ -148,6 +176,10 @@ Return ONLY the JSON array, no markdown fencing.`
         matcha_finish: cafe.matchaPowder?.finish,
         menu: cafe.menu || [],
       };
+
+      if (cafe.photoUrl) {
+        row.photo_url = cafe.photoUrl;
+      }
 
       const { error: upsertError } = await supabase
         .from('cafes')

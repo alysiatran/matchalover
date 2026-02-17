@@ -123,6 +123,28 @@ Return ONLY the JSON array, no markdown fencing.`
       );
     }
 
+    // Filter out low-quality/irrelevant photo URLs
+    const isGoodPhoto = (url: string): boolean => {
+      const lower = url.toLowerCase();
+      const rejectPatterns = [
+        'logo', 'icon', 'avatar', 'favicon', 'placeholder', 'yelp_og_image',
+        'badge', 'button', 'banner-ad', 'sprite', 'pixel', 'tracking',
+        'spacer', '1x1', 'widget', 'emoji', 'arrow', 'chevron',
+        'social', 'facebook', 'twitter', 'instagram', 'linkedin', 'pinterest',
+        'google-play', 'app-store', 'download', 'qr-code',
+        'map-marker', 'pin-icon', 'star-rating', 'rating',
+      ];
+      if (rejectPatterns.some(p => lower.includes(p))) return false;
+      // Reject tiny images (common in filenames like 50x50, 16x16)
+      if (/\b\d{1,2}x\d{1,2}\b/.test(lower)) return false;
+      // Reject SVGs (usually icons/logos)
+      if (lower.endsWith('.svg')) return false;
+      // Reject very short filenames (often icons)
+      const filename = lower.split('/').pop() || '';
+      if (filename.length < 8) return false;
+      return true;
+    };
+
     // Fetch real photos for each cafe in parallel using Firecrawl search
     await Promise.allSettled(cafes.map(async (cafe: any) => {
       const allPhotos: string[] = [];
@@ -145,7 +167,7 @@ Return ONLY the JSON array, no markdown fencing.`
         for (const result of results) {
           // Collect og:image
           const ogImage = result?.metadata?.ogImage || result?.metadata?.['og:image'];
-          if (ogImage && ogImage.startsWith('http') && !ogImage.includes('placeholder') && !ogImage.includes('yelp_og_image') && !ogImage.includes('logo')) {
+          if (ogImage && ogImage.startsWith('http') && isGoodPhoto(ogImage)) {
             if (!allPhotos.includes(ogImage)) allPhotos.push(ogImage);
           }
 
@@ -155,7 +177,7 @@ Return ONLY the JSON array, no markdown fencing.`
           let match;
           while ((match = imgRegex.exec(md)) !== null) {
             const url = match[1];
-            if (!url.includes('logo') && !url.includes('icon') && !url.includes('avatar') && !allPhotos.includes(url)) {
+            if (isGoodPhoto(url) && !allPhotos.includes(url)) {
               allPhotos.push(url);
             }
             if (allPhotos.length >= 8) break;

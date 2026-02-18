@@ -1,0 +1,1 @@
+ALTER TABLE public.cafes ADD CONSTRAINT cafes_name_address_unique UNIQUE (name, address);

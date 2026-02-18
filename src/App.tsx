@@ -8,6 +8,8 @@ import Explore from "./pages/Explore";
 import Saved from "./pages/Saved";
 import Profile from "./pages/Profile";
 import CafeDetail from "./pages/CafeDetail";
+import Auth from "./pages/Auth";
+import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
 import BottomNav from "./components/BottomNav";
 
@@ -26,6 +28,8 @@ const App = () => (
             <Route path="/saved" element={<Saved />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/cafe/:id" element={<CafeDetail />} />
+            <Route path="/auth" element={<Auth />} />
+            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
           <BottomNav />

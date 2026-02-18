@@ -1,6 +1,11 @@
-import { User, Settings, MapPin, Star } from "lucide-react";
+import { User, Settings, MapPin, Star, Store } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 
 const Profile = () => {
+  const { user, profile, loading } = useAuth();
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen bg-background pb-24 pt-14">
       <div className="px-5 space-y-6">
@@ -11,8 +16,12 @@ const Profile = () => {
             <User className="w-7 h-7 text-primary" />
           </div>
           <div>
-            <h2 className="font-display text-lg font-semibold text-foreground">Matcha Lover</h2>
-            <p className="text-sm text-muted-foreground font-body">San Francisco, CA</p>
+            <h2 className="font-display text-lg font-semibold text-foreground">
+              {profile?.display_name || "Matcha Lover"}
+            </h2>
+            <p className="text-sm text-muted-foreground font-body">
+              {profile?.email || "San Francisco, CA"}
+            </p>
           </div>
         </div>
 
@@ -34,6 +43,15 @@ const Profile = () => {
         </div>
 
         <div className="space-y-2">
+          {/* Business owner link */}
+          <button
+            onClick={() => navigate(user ? "/dashboard" : "/auth")}
+            className="w-full text-left px-4 py-3.5 rounded-xl bg-primary/10 border border-primary/20 font-body text-sm text-primary font-semibold hover:bg-primary/15 transition-colors flex items-center gap-2"
+          >
+            <Store className="w-4 h-4" />
+            {user ? "Business Dashboard" : "Business Owner? Sign in"}
+          </button>
+
           {["Edit Profile", "Notifications", "Preferences", "Help & Support"].map((item) => (
             <button
               key={item}

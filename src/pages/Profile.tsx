@@ -1,10 +1,24 @@
-import { User, Settings, MapPin, Star, Store } from "lucide-react";
+import { User, Settings, MapPin, Star, Store, ShieldCheck } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
+import { useState, useEffect } from "react";
 
 const Profile = () => {
   const { user, profile, loading } = useAuth();
   const navigate = useNavigate();
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", user.id)
+        .eq("role", "admin")
+        .then(({ data }) => setIsAdmin(!!(data && data.length > 0)));
+    }
+  }, [user]);
 
   return (
     <div className="min-h-screen bg-background pb-24 pt-14">
@@ -51,6 +65,16 @@ const Profile = () => {
             <Store className="w-4 h-4" />
             {user ? "Business Dashboard" : "Business Owner? Sign in"}
           </button>
+
+          {isAdmin && (
+            <button
+              onClick={() => navigate("/admin")}
+              className="w-full text-left px-4 py-3.5 rounded-xl bg-destructive/10 border border-destructive/20 font-body text-sm text-destructive font-semibold hover:bg-destructive/15 transition-colors flex items-center gap-2"
+            >
+              <ShieldCheck className="w-4 h-4" />
+              Admin Panel
+            </button>
+          )}
 
           {["Edit Profile", "Notifications", "Preferences", "Help & Support"].map((item) => (
             <button

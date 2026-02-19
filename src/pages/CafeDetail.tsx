@@ -175,7 +175,13 @@ const CafeDetail = () => {
         <div>
           <h2 className="font-display text-lg font-semibold text-foreground mb-3">Menu</h2>
           <div className="space-y-4">
-            {cafe.menu.map((section) => (
+            {[...cafe.menu].sort((a, b) => {
+              const aIsCoffee = /coffee/i.test(a.category);
+              const bIsCoffee = /coffee/i.test(b.category);
+              if (aIsCoffee && !bIsCoffee) return 1;
+              if (!aIsCoffee && bIsCoffee) return -1;
+              return 0;
+            }).map((section) => (
               <div key={section.category} className="bg-card rounded-xl border border-border p-4">
                 <h3 className="font-display text-sm font-semibold text-foreground mb-3 uppercase tracking-wide">{section.category}</h3>
                 <div className="space-y-3">

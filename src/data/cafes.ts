@@ -22,6 +22,16 @@ export interface MilkOption {
   price?: string;
 }
 
+export interface CustomizationItem {
+  name: string;
+  price?: string;
+}
+
+export interface CustomizationSection {
+  title: string;
+  items: CustomizationItem[];
+}
+
 export interface MatchaPowder {
   origin: string;
   grade: string;
@@ -47,6 +57,7 @@ export interface Cafe {
   matchaPowder: MatchaPowder;
   menu: MenuCategory[];
   milkOptions?: MilkOption[];
+  customizations?: CustomizationSection[];
 }
 
 export const cafes: Cafe[] = [

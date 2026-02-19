@@ -150,24 +150,44 @@ const CafeDetail = () => {
 
 
         {/* Customizations */}
-        {cafe.milkOptions && cafe.milkOptions.length > 0 && (
+        {((cafe.customizations && cafe.customizations.length > 0) || (cafe.milkOptions && cafe.milkOptions.length > 0)) && (
           <div>
             <h2 className="font-display text-lg font-semibold text-foreground mb-3 flex items-center gap-2">
               <Milk className="w-5 h-5 text-primary" />
               Customizations
             </h2>
-            <div className="bg-card rounded-xl border border-border p-4 space-y-3">
-              <h3 className="text-xs font-body text-muted-foreground uppercase tracking-wide">Milk Alternatives</h3>
-              <div className="flex flex-wrap gap-2">
-                {cafe.milkOptions.map((milk) => (
-                  <span
-                    key={milk.name}
-                    className="text-sm font-body font-medium bg-matcha-light text-accent-foreground px-3 py-1.5 rounded-full"
-                  >
-                    {milk.name}{milk.price ? ` ${milk.price}` : ''}
-                  </span>
-                ))}
-              </div>
+            <div className="bg-card rounded-xl border border-border p-4 space-y-4">
+              {cafe.customizations && cafe.customizations.length > 0 ? (
+                cafe.customizations.map((section) => (
+                  <div key={section.title}>
+                    <h3 className="text-xs font-body text-muted-foreground uppercase tracking-wide mb-2">{section.title}</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {section.items.map((item) => (
+                        <span
+                          key={item.name}
+                          className="text-sm font-body font-medium bg-matcha-light text-accent-foreground px-3 py-1.5 rounded-full"
+                        >
+                          {item.name}{item.price ? ` ${item.price}` : ''}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div>
+                  <h3 className="text-xs font-body text-muted-foreground uppercase tracking-wide mb-2">Milk Alternatives</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {cafe.milkOptions!.map((milk) => (
+                      <span
+                        key={milk.name}
+                        className="text-sm font-body font-medium bg-matcha-light text-accent-foreground px-3 py-1.5 rounded-full"
+                      >
+                        {milk.name}{milk.price ? ` ${milk.price}` : ''}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         )}

@@ -148,19 +148,6 @@ const CafeDetail = () => {
           </div>
         </div>
 
-        <div>
-          <h2 className="font-display text-lg font-semibold text-foreground mb-3">Tags</h2>
-          <div className="flex flex-wrap gap-2">
-            {cafe.tags.map((tag) => (
-              <span
-                key={tag}
-                className="text-sm font-body font-medium bg-matcha-light text-accent-foreground px-3 py-1.5 rounded-full"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-        </div>
 
         {/* Milk Options */}
         {cafe.milkOptions && cafe.milkOptions.length > 0 && (

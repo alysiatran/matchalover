@@ -10,6 +10,7 @@ import Profile from "./pages/Profile";
 import CafeDetail from "./pages/CafeDetail";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
+import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 import BottomNav from "./components/BottomNav";
 
@@ -30,6 +31,7 @@ const App = () => (
             <Route path="/cafe/:id" element={<CafeDetail />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/admin" element={<Admin />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
           <BottomNav />

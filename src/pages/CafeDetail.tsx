@@ -141,7 +141,7 @@ const CafeDetail = () => {
             </div>
             {cafe.matchaPowder.grams && (
               <div className="flex justify-between items-center">
-                <span className="text-xs font-body text-muted-foreground uppercase tracking-wide">Serving Size</span>
+                <span className="text-xs font-body text-muted-foreground uppercase tracking-wide">Grams Used</span>
                 <span className="text-sm font-body font-medium text-primary">{cafe.matchaPowder.grams}</span>
               </div>
             )}

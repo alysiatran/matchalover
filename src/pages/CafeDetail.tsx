@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Star, MapPin, Clock, Heart, Share2, Leaf, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowLeft, Star, MapPin, Clock, Heart, Share2, Leaf, ChevronLeft, ChevronRight, Milk } from "lucide-react";
 import { useCafes } from "@/hooks/useCafes";
 import { useState, useRef } from "react";
 import cafe1 from "@/assets/cafe-1.jpg";
@@ -161,6 +161,28 @@ const CafeDetail = () => {
             ))}
           </div>
         </div>
+
+        {/* Milk Options */}
+        {cafe.milkOptions && cafe.milkOptions.length > 0 && (
+          <div>
+            <h2 className="font-display text-lg font-semibold text-foreground mb-3 flex items-center gap-2">
+              <Milk className="w-5 h-5 text-primary" />
+              Milk Options
+            </h2>
+            <div className="bg-card rounded-xl border border-border p-4">
+              <div className="flex flex-wrap gap-2">
+                {cafe.milkOptions.map((milk) => (
+                  <span
+                    key={milk.name}
+                    className="text-sm font-body font-medium bg-matcha-light text-accent-foreground px-3 py-1.5 rounded-full"
+                  >
+                    {milk.name}{milk.price ? ` ${milk.price}` : ''}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Menu */}
         <div>

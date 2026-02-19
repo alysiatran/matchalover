@@ -61,6 +61,7 @@ export type Database = {
           matcha_grams: string | null
           matcha_origin: string | null
           menu: Json | null
+          milk_options: Json | null
           name: string
           photo_url: string | null
           photos: string[] | null
@@ -84,6 +85,7 @@ export type Database = {
           matcha_grams?: string | null
           matcha_origin?: string | null
           menu?: Json | null
+          milk_options?: Json | null
           name: string
           photo_url?: string | null
           photos?: string[] | null
@@ -107,6 +109,7 @@ export type Database = {
           matcha_grams?: string | null
           matcha_origin?: string | null
           menu?: Json | null
+          milk_options?: Json | null
           name?: string
           photo_url?: string | null
           photos?: string[] | null

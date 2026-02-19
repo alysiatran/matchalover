@@ -232,7 +232,7 @@ Return ONLY the JSON array, no markdown fencing.`
 
       const { error: upsertError } = await supabase
         .from('cafes')
-        .upsert(row, { onConflict: 'name,address' });
+        .upsert(row, { onConflict: 'name' });
 
       if (upsertError) {
         console.error('Upsert error for', cafe.name, upsertError);

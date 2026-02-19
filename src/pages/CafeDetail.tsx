@@ -149,14 +149,15 @@ const CafeDetail = () => {
         </div>
 
 
-        {/* Milk Options */}
+        {/* Customizations */}
         {cafe.milkOptions && cafe.milkOptions.length > 0 && (
           <div>
             <h2 className="font-display text-lg font-semibold text-foreground mb-3 flex items-center gap-2">
               <Milk className="w-5 h-5 text-primary" />
-              Milk Options
+              Customizations
             </h2>
-            <div className="bg-card rounded-xl border border-border p-4">
+            <div className="bg-card rounded-xl border border-border p-4 space-y-3">
+              <h3 className="text-xs font-body text-muted-foreground uppercase tracking-wide">Milk Alternatives</h3>
               <div className="flex flex-wrap gap-2">
                 {cafe.milkOptions.map((milk) => (
                   <span

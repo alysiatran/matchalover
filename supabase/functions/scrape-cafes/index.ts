@@ -105,8 +105,15 @@ Deno.serve(async (req) => {
       "category": "string",
       "items": [{ "name": "string", "price": "string like $5", "description": "string (optional)", "imageUrl": "string URL of the menu item photo if found (optional)" }]
     }
+  ],
+  "customizations": [
+    {
+      "title": "string (section name like 'Milk Alternatives', 'Extras', 'Sweetness Level', 'Add-ons', 'Toppings')",
+      "items": [{ "name": "string", "price": "string like '+$1' (optional, omit if no extra charge)" }]
+    }
   ]
 }
+Extract customization options when mentioned (milk choices, sweetness levels, add-ons, extras, toppings, size options, etc.). If none found, use an empty array.
 Return ONLY the JSON array, no markdown fencing.`
           },
           {
@@ -223,6 +230,7 @@ Return ONLY the JSON array, no markdown fencing.`
         matcha_finish: cafe.matchaPowder?.finish,
         matcha_grams: cafe.matchaPowder?.grams || null,
         menu: cafe.menu || [],
+        customizations: cafe.customizations || [],
         photos: cafe.photos || [],
       };
 

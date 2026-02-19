@@ -17,6 +17,11 @@ export interface MenuCategory {
   items: MenuItem[];
 }
 
+export interface MilkOption {
+  name: string;
+  price?: string;
+}
+
 export interface MatchaPowder {
   origin: string;
   grade: string;
@@ -41,6 +46,7 @@ export interface Cafe {
   priceRange: string;
   matchaPowder: MatchaPowder;
   menu: MenuCategory[];
+  milkOptions?: MilkOption[];
 }
 
 export const cafes: Cafe[] = [

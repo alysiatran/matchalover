@@ -1,0 +1,1 @@
+ALTER TABLE public.cafes ADD COLUMN milk_options jsonb DEFAULT '[]'::jsonb;

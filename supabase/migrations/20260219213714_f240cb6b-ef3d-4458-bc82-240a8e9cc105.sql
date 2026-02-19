@@ -1,0 +1,1 @@
+ALTER TABLE public.cafes ADD COLUMN customizations jsonb DEFAULT '[]'::jsonb;

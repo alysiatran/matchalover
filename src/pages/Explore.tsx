@@ -1,45 +1,19 @@
 import { useState, useMemo } from "react";
-import { useCafes } from "@/hooks/useCafes";
 import { useEvents } from "@/hooks/useEvents";
 import { useLocation } from "@/hooks/useLocation";
 import SearchBar from "@/components/SearchBar";
-import CafeCard from "@/components/CafeCard";
 import EventCard from "@/components/EventCard";
 import LocationPicker from "@/components/LocationPicker";
 
-type Tab = "cafes" | "events";
+type Tab = "events" | "recipes" | "community";
 
 const Explore = () => {
   const [search, setSearch] = useState("");
-  const [activeTab, setActiveTab] = useState<Tab>("cafes");
+  const [activeTab, setActiveTab] = useState<Tab>("events");
   const { location, setLocation } = useLocation();
-  const { data: cafes = [] } = useCafes(location);
   const { data: events = [], isLoading: eventsLoading } = useEvents();
 
-  const filteredCafes = useMemo(() => {
-    // Deduplicate by name (keep highest rated)
-    const seen = new Map<string, typeof cafes[0]>();
-    for (const c of cafes) {
-      const key = c.name.toLowerCase();
-      const existing = seen.get(key);
-      if (!existing || c.rating > existing.rating) seen.set(key, c);
-    }
-    let result = Array.from(seen.values());
-
-    if (search) {
-      const q = search.toLowerCase();
-      result = result.filter(
-        (c) =>
-          c.name.toLowerCase().includes(q) ||
-          c.tags.some((t) => t.toLowerCase().includes(q)) ||
-          c.address.toLowerCase().includes(q)
-      );
-    }
-    return result;
-  }, [search, cafes]);
-
   const filteredEvents = useMemo(() => {
-    // Deduplicate events by title + venue
     const seen = new Map<string, typeof events[0]>();
     for (const e of events) {
       const key = `${e.title.toLowerCase()}|${e.venue.toLowerCase()}`;
@@ -72,42 +46,22 @@ const Explore = () => {
 
         {/* Tab bar */}
         <div className="flex rounded-xl bg-muted p-1">
-          <button
-            onClick={() => setActiveTab("cafes")}
-            className={`flex-1 py-2.5 text-sm font-body font-semibold rounded-lg transition-all ${
-              activeTab === "cafes"
-                ? "bg-background text-foreground shadow-sm"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            Cafes
-          </button>
-          <button
-            onClick={() => setActiveTab("events")}
-            className={`flex-1 py-2.5 text-sm font-body font-semibold rounded-lg transition-all ${
-              activeTab === "events"
-                ? "bg-background text-foreground shadow-sm"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            Events
-          </button>
+          {(["events", "recipes", "community"] as Tab[]).map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`flex-1 py-2.5 text-sm font-body font-semibold rounded-lg transition-all capitalize ${
+                activeTab === tab
+                  ? "bg-background text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {tab}
+            </button>
+          ))}
         </div>
 
         {/* Content */}
-        {activeTab === "cafes" && (
-          <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {filteredCafes.map((cafe, i) => (
-                <CafeCard key={cafe.id} cafe={cafe} index={i} />
-              ))}
-            </div>
-            {filteredCafes.length === 0 && (
-              <p className="text-center text-muted-foreground font-body py-12">No cafes found.</p>
-            )}
-          </>
-        )}
-
         {activeTab === "events" && (
           <>
             {eventsLoading ? (
@@ -127,6 +81,18 @@ const Explore = () => {
               </>
             )}
           </>
+        )}
+
+        {activeTab === "recipes" && (
+          <div className="text-center py-12">
+            <p className="text-muted-foreground font-body">Recipes coming soon! 🍵</p>
+          </div>
+        )}
+
+        {activeTab === "community" && (
+          <div className="text-center py-12">
+            <p className="text-muted-foreground font-body">Community coming soon! 💚</p>
+          </div>
         )}
       </div>
     </div>

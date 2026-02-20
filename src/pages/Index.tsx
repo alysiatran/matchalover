@@ -36,13 +36,20 @@ const Index = () => {
           c.description.toLowerCase().includes(q)
       );
     }
-    if (activeCategory === "Nearby") {
-      result = [...result].sort((a, b) => parseFloat(a.distance) - parseFloat(b.distance));
-    } else if (activeCategory === "Top Rated") {
-      result = [...result].sort((a, b) => b.rating - a.rating);
-    } else if (activeCategory !== "All") {
+    if (activeCategory === "Hojicha Offered") {
       result = result.filter((c) =>
-        c.tags.some((t) => t.toLowerCase() === activeCategory.toLowerCase())
+        c.tags.some((t) => t.toLowerCase().includes("hojicha")) ||
+        c.menu.some((cat) => cat.items.some((item) => item.name.toLowerCase().includes("hojicha")))
+      );
+    } else if (activeCategory === "Food Options") {
+      result = result.filter((c) =>
+        c.menu.some((cat) =>
+          !cat.category.toLowerCase().includes("drink") &&
+          !cat.category.toLowerCase().includes("matcha drink") &&
+          !cat.category.toLowerCase().includes("classic") &&
+          !cat.category.toLowerCase().includes("signature drink") &&
+          !cat.category.toLowerCase().includes("tea ceremony")
+        )
       );
     }
     return result;

@@ -219,4 +219,4 @@ export const cafes: Cafe[] = [
   },
 ];
 
-export const categories = ["All", "Nearby", "Top Rated", "Traditional", "Modern", "Desserts"];
+export const categories = ["All", "Hojicha Offered", "Food Options"];

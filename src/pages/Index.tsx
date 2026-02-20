@@ -82,31 +82,43 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background pb-24">
       {/* Hero */}
-      <div className="relative h-60 overflow-hidden">
+      <div className="relative h-72 overflow-hidden">
         <img
           src={heroImage}
           alt="Matcha latte"
-          className="w-full h-full object-cover object-[center_70%]"
+          className="w-full h-full object-cover object-[center_70%] scale-105"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-foreground/20 to-background" />
-        <div className="absolute bottom-6 left-5 right-5">
-          <h1 className="font-display text-3xl font-bold text-primary-foreground drop-shadow-lg">
-            Matcha Moments
+        <div className="absolute inset-0 bg-gradient-to-b from-foreground/10 via-foreground/20 to-background" />
+        <div className="absolute bottom-0 left-0 right-0 px-5 pb-5">
+          <p className="font-body text-xs uppercase tracking-[0.2em] text-primary-foreground/80 mb-1">
+            Discover & sip
+          </p>
+          <h1 className="font-display text-4xl font-bold text-primary-foreground drop-shadow-lg leading-tight">
+            Matcha<br />Moments
           </h1>
-          <div className="mt-1">
+          <div className="mt-2">
             <LocationPicker location={location} onLocationChange={setLocation} variant="hero" />
           </div>
         </div>
       </div>
 
-      {/* Content */}
-      <div className="px-5 -mt-4 relative z-10 space-y-5">
-        <SearchBar value={search} onChange={setSearch} />
-        <CategoryChips
-          categories={categories}
-          active={activeCategory}
-          onSelect={setActiveCategory}
-        />
+      {/* Search & Filters */}
+      <div className="px-5 -mt-5 relative z-10 space-y-4">
+        <div className="bg-card rounded-2xl shadow-md border border-border p-4 space-y-3">
+          <SearchBar value={search} onChange={setSearch} />
+          <CategoryChips
+            categories={categories}
+            active={activeCategory}
+            onSelect={setActiveCategory}
+          />
+        </div>
+
+        {/* Cafe count */}
+        <div className="flex items-center justify-between">
+          <p className="font-body text-sm text-muted-foreground">
+            {filtered.length} {filtered.length === 1 ? "cafe" : "cafes"} nearby
+          </p>
+        </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {filtered.map((cafe, i) => (

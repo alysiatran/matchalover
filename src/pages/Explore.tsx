@@ -3,7 +3,9 @@ import { useEvents } from "@/hooks/useEvents";
 import { useLocation } from "@/hooks/useLocation";
 import SearchBar from "@/components/SearchBar";
 import EventCard from "@/components/EventCard";
+import RecipeCard from "@/components/RecipeCard";
 import LocationPicker from "@/components/LocationPicker";
+import { recipes } from "@/data/recipes";
 
 type Tab = "events" | "recipes" | "community";
 
@@ -84,8 +86,10 @@ const Explore = () => {
         )}
 
         {activeTab === "recipes" && (
-          <div className="text-center py-12">
-            <p className="text-muted-foreground font-body">Recipes coming soon! 🍵</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {recipes.map((recipe, i) => (
+              <RecipeCard key={recipe.id} recipe={recipe} index={i} />
+            ))}
           </div>
         )}
 

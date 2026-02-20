@@ -2,12 +2,14 @@ import { User, Settings, MapPin, Star, Store, ShieldCheck } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useVisitedCafes } from "@/hooks/useVisitedCafes";
+import { useSavedCafes } from "@/hooks/useSavedCafes";
 import { supabase } from "@/integrations/supabase/client";
 import { useState, useEffect } from "react";
 
 const Profile = () => {
   const { user, profile, loading } = useAuth();
   const { visitedIds } = useVisitedCafes();
+  const { savedIds } = useSavedCafes();
   const navigate = useNavigate();
   const [isAdmin, setIsAdmin] = useState(false);
 
@@ -45,7 +47,7 @@ const Profile = () => {
           {[
             { label: "Visited", value: visitedIds.length.toString(), icon: MapPin },
             { label: "Reviews", value: "8", icon: Star },
-            { label: "Saved", value: "5", icon: Settings },
+            { label: "Saved", value: savedIds.length.toString(), icon: Settings },
           ].map(({ label, value, icon: Icon }) => (
             <div
               key={label}

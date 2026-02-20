@@ -41,15 +41,10 @@ const Index = () => {
         c.tags.some((t) => t.toLowerCase().includes("hojicha")) ||
         c.menu.some((cat) => cat.items.some((item) => item.name.toLowerCase().includes("hojicha")))
       );
-    } else if (activeCategory === "Food Options") {
+    } else if (activeCategory === "Soft Opening") {
       result = result.filter((c) =>
-        c.menu.some((cat) =>
-          !cat.category.toLowerCase().includes("drink") &&
-          !cat.category.toLowerCase().includes("matcha drink") &&
-          !cat.category.toLowerCase().includes("classic") &&
-          !cat.category.toLowerCase().includes("signature drink") &&
-          !cat.category.toLowerCase().includes("tea ceremony")
-        )
+        c.tags.some((t) => t.toLowerCase().includes("soft opening")) ||
+        c.description.toLowerCase().includes("soft opening")
       );
     }
     return result;

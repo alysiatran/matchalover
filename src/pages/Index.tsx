@@ -35,6 +35,8 @@ const Index = () => {
       "taz matcha",
       "plus84",
       "plus 84",
+      "vale matcha",
+      "jin jin matcha",
     ];
     result.sort((a, b) => {
       const aIdx = pinnedNames.findIndex((p) => a.name.toLowerCase().includes(p));

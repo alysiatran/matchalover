@@ -219,4 +219,4 @@ export const cafes: Cafe[] = [
   },
 ];
 
-export const categories = ["All", "Hojicha Offered", "Food Options"];
+export const categories = ["All", "Hojicha Offered", "Soft Opening"];

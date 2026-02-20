@@ -1,18 +1,35 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useEffect, useState } from "react";
-import { toast } from "@/hooks/use-toast";
+
+const GUEST_VISITED_KEY = "guest_visited_cafes";
+
+function getGuestVisited(): string[] {
+  try {
+    return JSON.parse(localStorage.getItem(GUEST_VISITED_KEY) || "[]");
+  } catch {
+    return [];
+  }
+}
+
+function setGuestVisited(ids: string[]) {
+  localStorage.setItem(GUEST_VISITED_KEY, JSON.stringify(ids));
+}
 
 export function useVisitedCafes() {
   const [userId, setUserId] = useState<string | null>(null);
+  const [authLoaded, setAuthLoaded] = useState(false);
+  const [guestVisited, setGuestVisitedState] = useState<string[]>(getGuestVisited);
   const queryClient = useQueryClient();
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUserId(session?.user?.id ?? null);
+      setAuthLoaded(true);
     });
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUserId(session?.user?.id ?? null);
+      setAuthLoaded(true);
     });
     return () => subscription.unsubscribe();
   }, []);
@@ -31,11 +48,21 @@ export function useVisitedCafes() {
     enabled: !!userId,
   });
 
+  // Merge: authenticated users use DB, guests use localStorage
+  const effectiveVisitedIds = userId ? visitedIds : guestVisited;
+
   const toggleVisited = useMutation({
     mutationFn: async (cafeId: string) => {
       if (!userId) {
-        toast({ title: "Sign in to track visits", description: "Create an account or sign in first.", variant: "destructive" });
-        throw new Error("Must be logged in");
+        // Guest mode: toggle in localStorage
+        const current = getGuestVisited();
+        const isVisited = current.includes(cafeId);
+        const updated = isVisited
+          ? current.filter((id) => id !== cafeId)
+          : [...current, cafeId];
+        setGuestVisited(updated);
+        setGuestVisitedState(updated);
+        return;
       }
       const isVisited = visitedIds.includes(cafeId);
       if (isVisited) {
@@ -53,7 +80,9 @@ export function useVisitedCafes() {
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["visited-cafes", userId] });
+      if (userId) {
+        queryClient.invalidateQueries({ queryKey: ["visited-cafes", userId] });
+      }
     },
     onError: (error) => {
       console.error("Visited toggle error:", error);
@@ -61,9 +90,10 @@ export function useVisitedCafes() {
   });
 
   return {
-    visitedIds,
-    isVisited: (cafeId: string) => visitedIds.includes(cafeId),
+    visitedIds: effectiveVisitedIds,
+    isVisited: (cafeId: string) => effectiveVisitedIds.includes(cafeId),
     toggleVisited: toggleVisited.mutate,
     isToggling: toggleVisited.isPending,
+    isGuest: authLoaded && !userId,
   };
 }

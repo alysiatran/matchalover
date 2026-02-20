@@ -113,27 +113,7 @@ export function useCafes(location: string = "Seattle, WA") {
     retry: 1,
   });
 
-  // Trigger a background scrape for the current location
-  useEffect(() => {
-    const scrapeKey = `lastScrapeTime_${location}`;
-    const lastScrape = localStorage.getItem(scrapeKey);
-    const now = Date.now();
-    const thirtyMinutes = 30 * 60 * 1000;
-
-    if (!lastScrape || now - parseInt(lastScrape) > thirtyMinutes) {
-      localStorage.setItem(scrapeKey, String(now));
-      supabase.functions.invoke("scrape-cafes", {
-        body: { location },
-      }).then(({ error }) => {
-        if (error) {
-          console.error("Background scrape error:", error);
-        } else {
-          console.log("Background scrape complete for", location);
-          queryClient.invalidateQueries({ queryKey: ["cafes", location] });
-        }
-      });
-    }
-  }, [queryClient, location]);
+  // Background scraping disabled — trigger manually only
 
   return query;
 }

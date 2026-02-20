@@ -199,13 +199,19 @@ Return ONLY the JSON array, no markdown fencing.`
       }
     }));
 
+    // Filter out permanently closed locations
+    const closedCafes = ['matcha cafe maiko'];
+    const filteredCafes = cafes.filter((cafe: any) =>
+      !closedCafes.includes(cafe.name?.toLowerCase?.().trim())
+    );
+
     // Persist cafes to database
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     let savedCount = 0;
-    for (const cafe of cafes) {
+    for (const cafe of filteredCafes) {
       const row: Record<string, unknown> = {
         name: cafe.name,
         address: cafe.address,
@@ -244,7 +250,7 @@ Return ONLY the JSON array, no markdown fencing.`
     console.log(`Saved ${savedCount} cafes for "${location}"`);
 
     return new Response(
-      JSON.stringify({ success: true, location, scraped: cafes.length, saved: savedCount }),
+      JSON.stringify({ success: true, location, scraped: filteredCafes.length, saved: savedCount }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   } catch (error) {

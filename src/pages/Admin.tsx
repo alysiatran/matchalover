@@ -4,6 +4,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import {
   ArrowLeft,
@@ -11,6 +12,9 @@ import {
   XCircle,
   Loader2,
   ShieldCheck,
+  Hash,
+  Plus,
+  Trash2,
 } from "lucide-react";
 import {
   Table,
@@ -20,6 +24,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useChatRooms, type ChatRoom } from "@/hooks/useChat";
 
 interface Claim {
   id: string;
@@ -266,7 +271,114 @@ const Admin = () => {
             </div>
           )}
         </div>
+
+        {/* Chat Channels Management */}
+        <ChatChannelsAdmin />
       </div>
+    </div>
+  );
+};
+
+const ChatChannelsAdmin = () => {
+  const { data: rooms = [], isLoading, refetch } = useChatRooms();
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [creating, setCreating] = useState(false);
+
+  const handleCreate = async () => {
+    if (!name.trim()) return;
+    setCreating(true);
+    const { error } = await supabase
+      .from("chat_rooms")
+      .insert({ name: name.trim(), description: description.trim() || null });
+    setCreating(false);
+    if (error) {
+      toast.error("Failed to create channel: " + error.message);
+    } else {
+      toast.success(`Created #${name.trim()}`);
+      setName("");
+      setDescription("");
+      refetch();
+    }
+  };
+
+  const handleDelete = async (room: ChatRoom) => {
+    if (!confirm(`Delete #${room.name}? All messages will be lost.`)) return;
+    const { error } = await supabase.from("chat_rooms").delete().eq("id", room.id);
+    if (error) {
+      toast.error("Failed to delete: " + error.message);
+    } else {
+      toast.success(`Deleted #${room.name}`);
+      refetch();
+    }
+  };
+
+  return (
+    <div className="space-y-3">
+      <h2 className="font-display text-lg font-semibold text-foreground">Chat Channels</h2>
+
+      {/* Create form */}
+      <div className="bg-card rounded-2xl p-4 border border-border space-y-3">
+        <p className="text-xs font-body text-muted-foreground uppercase tracking-wide">New Channel</p>
+        <Input
+          placeholder="Channel name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          maxLength={50}
+          className="font-body"
+        />
+        <Input
+          placeholder="Description (optional)"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          maxLength={120}
+          className="font-body"
+        />
+        <Button
+          size="sm"
+          onClick={handleCreate}
+          disabled={!name.trim() || creating}
+          className="rounded-xl font-body"
+        >
+          <Plus className="w-4 h-4 mr-1" /> {creating ? "Creating…" : "Create Channel"}
+        </Button>
+      </div>
+
+      {/* Existing channels */}
+      {isLoading ? (
+        <div className="flex justify-center py-4">
+          <Loader2 className="w-5 h-5 animate-spin text-primary" />
+        </div>
+      ) : rooms.length === 0 ? (
+        <p className="text-sm text-muted-foreground font-body">No channels yet.</p>
+      ) : (
+        <div className="space-y-2">
+          {rooms.map((room) => (
+            <div
+              key={room.id}
+              className="flex items-center justify-between bg-card rounded-2xl p-3 border border-border"
+            >
+              <div className="flex items-center gap-2 min-w-0">
+                <Hash className="w-4 h-4 text-primary shrink-0" />
+                <div className="min-w-0">
+                  <p className="font-display text-sm font-semibold text-foreground">{room.name}</p>
+                  {room.description && (
+                    <p className="text-xs font-body text-muted-foreground truncate">{room.description}</p>
+                  )}
+                </div>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive shrink-0"
+                onClick={() => handleDelete(room)}
+              >
+                <Trash2 className="w-4 h-4" />
+              </Button>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

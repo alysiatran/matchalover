@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { categories } from "@/data/cafes";
 import { useCafes } from "@/hooks/useCafes";
+import { useSavedCafes } from "@/hooks/useSavedCafes";
 import { useLocation } from "@/hooks/useLocation";
 import SearchBar from "@/components/SearchBar";
 import CategoryChips from "@/components/CategoryChips";
@@ -13,6 +14,7 @@ const Index = () => {
   const [activeCategory, setActiveCategory] = useState("All");
   const { location, setLocation } = useLocation();
   const { data: cafes = [] } = useCafes(location);
+  const { isSaved, toggleSave } = useSavedCafes();
 
   const filtered = useMemo(() => {
     // Deduplicate by name (keep highest rated)
@@ -106,7 +108,7 @@ const Index = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {filtered.map((cafe, i) => (
-            <CafeCard key={cafe.id} cafe={cafe} index={i} />
+            <CafeCard key={cafe.id} cafe={cafe} index={i} isSaved={isSaved(cafe.id)} onToggleSave={toggleSave} />
           ))}
         </div>
 

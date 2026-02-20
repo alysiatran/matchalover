@@ -364,6 +364,35 @@ export type Database = {
         }
         Relationships: []
       }
+      saved_cafes: {
+        Row: {
+          cafe_id: string
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          cafe_id: string
+          created_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          cafe_id?: string
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "saved_cafes_cafe_id_fkey"
+            columns: ["cafe_id"]
+            isOneToOne: false
+            referencedRelation: "cafes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           id: string

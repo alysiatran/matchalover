@@ -23,4 +23,25 @@ export const recipes: Recipe[] = [
     tags: ["Beginner", "Latte", "Hot or Iced"],
     videoUrl: "https://www.youtube.com/shorts/9V714VOJ3NY",
   },
+  {
+    id: "2",
+    title: "Hojicha Latte",
+    description:
+      "A warm, roasty hojicha latte with a smooth and nutty flavor. Perfect for those who love a toasty alternative to matcha.",
+    prepTime: "3 min",
+    servings: "1 serving",
+    difficulty: "Easy",
+    ingredients: [
+      "5–6g hojicha powder",
+      "60g hot water",
+      "80g milk of your choice",
+    ],
+    steps: [
+      "Sift 5–6g of hojicha powder into a bowl or cup.",
+      "Add 60g of hot water and whisk until fully dissolved.",
+      "Heat or froth 80g of milk and pour over the hojicha. Enjoy!",
+    ],
+    tags: ["Beginner", "Latte", "Hojicha"],
+    videoUrl: "https://www.youtube.com/shorts/LnhQKXJtR7M",
+  },
 ];

@@ -9,6 +9,7 @@ import { Leaf, ArrowLeft } from "lucide-react";
 
 const Auth = () => {
   const [isSignUp, setIsSignUp] = useState(false);
+  const [accountType, setAccountType] = useState<"user" | "business">("user");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
@@ -22,7 +23,7 @@ const Auth = () => {
     setSubmitting(true);
 
     if (isSignUp) {
-      const { error } = await signUp(email, password, displayName, businessName);
+      const { error } = await signUp(email, password, displayName, accountType === "business" ? businessName : undefined);
       if (error) {
         toast.error(error.message);
       } else {
@@ -33,7 +34,7 @@ const Auth = () => {
       if (error) {
         toast.error(error.message);
       } else {
-        navigate("/dashboard");
+        navigate("/profile");
       }
     }
     setSubmitting(false);
@@ -51,18 +52,44 @@ const Auth = () => {
             <Leaf className="w-7 h-7 text-primary" />
           </div>
           <h1 className="font-display text-2xl font-bold text-foreground">
-            {isSignUp ? "Create Business Account" : "Business Login"}
+            {isSignUp ? "Create Account" : "Sign In"}
           </h1>
           <p className="text-sm text-muted-foreground font-body">
             {isSignUp
-              ? "Sign up to manage your cafe on Matcha Guide"
-              : "Sign in to your business dashboard"}
+              ? "Join the Matcha Guide community"
+              : "Welcome back to Matcha Guide"}
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {isSignUp && (
             <>
+              {/* Account type toggle */}
+              <div className="flex gap-2 p-1 bg-secondary rounded-xl">
+                <button
+                  type="button"
+                  onClick={() => setAccountType("user")}
+                  className={`flex-1 py-2 text-sm font-body font-semibold rounded-lg transition-colors ${
+                    accountType === "user"
+                      ? "bg-primary text-primary-foreground"
+                      : "text-muted-foreground"
+                  }`}
+                >
+                  Matcha Lover
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setAccountType("business")}
+                  className={`flex-1 py-2 text-sm font-body font-semibold rounded-lg transition-colors ${
+                    accountType === "business"
+                      ? "bg-primary text-primary-foreground"
+                      : "text-muted-foreground"
+                  }`}
+                >
+                  Business Owner
+                </button>
+              </div>
+
               <div className="space-y-2">
                 <Label htmlFor="displayName" className="font-body text-sm">Your Name</Label>
                 <Input
@@ -74,16 +101,18 @@ const Auth = () => {
                   className="rounded-xl"
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="businessName" className="font-body text-sm">Business Name</Label>
-                <Input
-                  id="businessName"
-                  value={businessName}
-                  onChange={(e) => setBusinessName(e.target.value)}
-                  placeholder="Matcha Magic"
-                  className="rounded-xl"
-                />
-              </div>
+              {accountType === "business" && (
+                <div className="space-y-2">
+                  <Label htmlFor="businessName" className="font-body text-sm">Business Name</Label>
+                  <Input
+                    id="businessName"
+                    value={businessName}
+                    onChange={(e) => setBusinessName(e.target.value)}
+                    placeholder="Matcha Magic"
+                    className="rounded-xl"
+                  />
+                </div>
+              )}
             </>
           )}
           <div className="space-y-2">
@@ -118,7 +147,7 @@ const Auth = () => {
         </form>
 
         <p className="text-center text-sm text-muted-foreground font-body">
-          {isSignUp ? "Already have an account?" : "Don't have a business account?"}{" "}
+          {isSignUp ? "Already have an account?" : "Don't have an account?"}{" "}
           <button
             onClick={() => setIsSignUp(!isSignUp)}
             className="text-primary font-semibold hover:underline"

@@ -1,4 +1,4 @@
-import { Star, MapPin, Heart } from "lucide-react";
+import { Star, MapPin, Heart, CheckCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import type { Cafe } from "@/data/cafes";
 import cafe1 from "@/assets/cafe-1.jpg";
@@ -10,9 +10,11 @@ interface CafeCardProps {
   index: number;
   isSaved?: boolean;
   onToggleSave?: (cafeId: string) => void;
+  isVisited?: boolean;
+  onToggleVisited?: (cafeId: string) => void;
 }
 
-const CafeCard = ({ cafe, index, isSaved = false, onToggleSave }: CafeCardProps) => {
+const CafeCard = ({ cafe, index, isSaved = false, onToggleSave, isVisited = false, onToggleVisited }: CafeCardProps) => {
   const navigate = useNavigate();
 
   return (
@@ -56,6 +58,22 @@ const CafeCard = ({ cafe, index, isSaved = false, onToggleSave }: CafeCardProps)
             </span>
           ))}
         </div>
+        {onToggleVisited && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleVisited(cafe.id);
+            }}
+            className="p-1.5 rounded-full hover:bg-muted transition-colors"
+            aria-label={isVisited ? "Mark as not visited" : "Mark as visited"}
+          >
+            <CheckCircle
+              className={`w-5 h-5 transition-colors ${
+                isVisited ? "text-primary fill-primary/20" : "text-muted-foreground"
+              }`}
+            />
+          </button>
+        )}
         {onToggleSave && (
           <button
             onClick={(e) => {

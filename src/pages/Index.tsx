@@ -80,11 +80,11 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background pb-24">
       {/* Hero */}
-      <div className="relative h-56 overflow-hidden">
+      <div className="relative h-72 overflow-hidden">
         <img
           src={heroImage}
           alt="Matcha latte"
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover object-[center_70%]"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-foreground/20 to-background" />
         <div className="absolute bottom-6 left-5 right-5">

@@ -5,6 +5,7 @@ import SearchBar from "@/components/SearchBar";
 import EventCard from "@/components/EventCard";
 import RecipeCard from "@/components/RecipeCard";
 import LocationPicker from "@/components/LocationPicker";
+import CommunityFeed from "@/components/CommunityFeed";
 import { recipes } from "@/data/recipes";
 
 type Tab = "events" | "recipes" | "community";
@@ -93,11 +94,7 @@ const Explore = () => {
           </div>
         )}
 
-        {activeTab === "community" && (
-          <div className="text-center py-12">
-            <p className="text-muted-foreground font-body">Community coming soon! 💚</p>
-          </div>
-        )}
+        {activeTab === "community" && <CommunityFeed />}
       </div>
     </div>
   );

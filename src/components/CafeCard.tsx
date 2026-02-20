@@ -38,8 +38,8 @@ const CafeCard = ({ cafe, index }: CafeCardProps) => {
           <MapPin className="w-3.5 h-3.5" />
           <span className="text-xs font-body">{cafe.distance} · {cafe.priceRange}</span>
         </div>
-        <div className="flex gap-2 mt-3">
-          {cafe.tags.map((tag) => (
+        <div className="flex gap-2 mt-3 flex-nowrap overflow-hidden">
+          {cafe.tags.slice(0, 2).map((tag) => (
             <span
               key={tag}
               className="text-[11px] font-body font-medium bg-matcha-light text-accent-foreground px-2.5 py-1 rounded-full"

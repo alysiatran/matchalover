@@ -89,13 +89,18 @@ const Index = () => {
           className="w-full h-full object-cover object-[center_70%] scale-105"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-foreground/10 via-foreground/20 to-background" />
-        <div className="absolute bottom-0 left-0 right-0 px-5 pb-5">
-          <p className="font-body text-xs uppercase tracking-[0.2em] text-primary-foreground/80 mb-1">
-            Discover & sip
-          </p>
-          <h1 className="font-display text-4xl font-bold text-primary-foreground drop-shadow-lg leading-tight">
-            Matcha<br />Moments
-          </h1>
+        <div className="absolute bottom-0 left-0 right-0 px-5 pb-5 flex items-end justify-between">
+          <div>
+            <p className="font-body text-xs uppercase tracking-[0.2em] text-primary-foreground/80 mb-1">
+              Discover & sip
+            </p>
+            <h1 className="font-display text-4xl font-bold text-primary-foreground drop-shadow-lg leading-tight">
+              Matcha<br />Moments
+            </h1>
+          </div>
+          <div className="mb-1">
+            <LocationPicker location={location} onLocationChange={setLocation} variant="hero" />
+          </div>
         </div>
       </div>
 
@@ -112,9 +117,8 @@ const Index = () => {
 
         {/* Location & count */}
         <div className="flex items-center justify-between">
-          <LocationPicker location={location} onLocationChange={setLocation} />
           <p className="font-body text-sm text-muted-foreground">
-            {filtered.length} {filtered.length === 1 ? "cafe" : "cafes"}
+            {filtered.length} {filtered.length === 1 ? "cafe" : "cafes"} nearby
           </p>
         </div>
 

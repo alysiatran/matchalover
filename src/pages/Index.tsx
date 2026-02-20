@@ -26,6 +26,26 @@ const Index = () => {
     }
     let result = Array.from(seen.values());
 
+    // Pin featured cafes to the top
+    const pinnedNames = [
+      "offline coffee",
+      "mina's matcha",
+      "grean matcha",
+      "yoka tea",
+      "taz matcha",
+      "plus 84",
+    ];
+    result.sort((a, b) => {
+      const aIdx = pinnedNames.findIndex((p) => a.name.toLowerCase().includes(p));
+      const bIdx = pinnedNames.findIndex((p) => b.name.toLowerCase().includes(p));
+      const aPinned = aIdx !== -1;
+      const bPinned = bIdx !== -1;
+      if (aPinned && !bPinned) return -1;
+      if (!aPinned && bPinned) return 1;
+      if (aPinned && bPinned) return aIdx - bIdx;
+      return 0;
+    });
+
     if (search) {
       const q = search.toLowerCase();
       result = result.filter(

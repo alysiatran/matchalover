@@ -96,9 +96,6 @@ const Index = () => {
           <h1 className="font-display text-4xl font-bold text-primary-foreground drop-shadow-lg leading-tight">
             Matcha<br />Moments
           </h1>
-          <div className="mt-2">
-            <LocationPicker location={location} onLocationChange={setLocation} variant="hero" />
-          </div>
         </div>
       </div>
 
@@ -113,10 +110,11 @@ const Index = () => {
           />
         </div>
 
-        {/* Cafe count */}
+        {/* Location & count */}
         <div className="flex items-center justify-between">
+          <LocationPicker location={location} onLocationChange={setLocation} />
           <p className="font-body text-sm text-muted-foreground">
-            {filtered.length} {filtered.length === 1 ? "cafe" : "cafes"} nearby
+            {filtered.length} {filtered.length === 1 ? "cafe" : "cafes"}
           </p>
         </div>
 

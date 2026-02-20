@@ -1,7 +1,8 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Star, MapPin, Clock, Heart, Share2, Leaf, ChevronLeft, ChevronRight, Milk } from "lucide-react";
 import { useCafes } from "@/hooks/useCafes";
-import { useState, useRef } from "react";
+import { useSavedCafes } from "@/hooks/useSavedCafes";
+import { useState } from "react";
 import cafe1 from "@/assets/cafe-1.jpg";
 
 const CafeDetail = () => {
@@ -9,7 +10,8 @@ const CafeDetail = () => {
   const navigate = useNavigate();
   const { data: cafes = [] } = useCafes();
   const cafe = cafes.find((c) => c.id === id);
-  const [liked, setLiked] = useState(false);
+  const { isSaved, toggleSave } = useSavedCafes();
+  const liked = cafe ? isSaved(cafe.id) : false;
   const [activePhoto, setActivePhoto] = useState(0);
   const fallbackImage = cafe1;
 
@@ -71,7 +73,7 @@ const CafeDetail = () => {
 
         <div className="absolute top-12 right-4 flex gap-2">
           <button
-            onClick={() => setLiked(!liked)}
+            onClick={() => cafe && toggleSave(cafe.id)}
             className="w-10 h-10 rounded-full bg-background/70 backdrop-blur-sm flex items-center justify-center transition-all hover:bg-background"
           >
             <Heart

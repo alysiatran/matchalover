@@ -29,10 +29,11 @@ const Index = () => {
     // Pin featured cafes to the top
     const pinnedNames = [
       "offline coffee",
-      "mina's matcha",
+      "mina",
       "grean matcha",
       "yoka tea",
       "taz matcha",
+      "plus84",
       "plus 84",
     ];
     result.sort((a, b) => {

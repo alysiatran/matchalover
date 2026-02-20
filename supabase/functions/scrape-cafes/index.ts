@@ -5,6 +5,65 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
 };
 
+/** Robustly extract a JSON array from an LLM response that may contain markdown fencing or truncation */
+function extractJsonArray(raw: string): any[] {
+  // Strip markdown code fences
+  let cleaned = raw.replace(/```json\s*/gi, '').replace(/```\s*/g, '').trim();
+
+  // Find the outermost array brackets
+  const start = cleaned.indexOf('[');
+  if (start === -1) throw new Error('No JSON array found in response');
+
+  // Find matching closing bracket by counting depth
+  let depth = 0;
+  let end = -1;
+  for (let i = start; i < cleaned.length; i++) {
+    if (cleaned[i] === '[') depth++;
+    else if (cleaned[i] === ']') {
+      depth--;
+      if (depth === 0) { end = i; break; }
+    }
+  }
+
+  // If array was truncated (no closing bracket found), try to repair
+  if (end === -1) {
+    console.warn('JSON array appears truncated, attempting repair...');
+    // Find the last complete object (last '}')
+    const lastBrace = cleaned.lastIndexOf('}');
+    if (lastBrace === -1) throw new Error('No complete JSON objects found');
+    // Trim everything after the last complete object, close the array
+    cleaned = cleaned.substring(start, lastBrace + 1) + ']';
+  } else {
+    cleaned = cleaned.substring(start, end + 1);
+  }
+
+  // Fix common LLM JSON issues
+  cleaned = cleaned
+    .replace(/,\s*}/g, '}')     // trailing commas in objects
+    .replace(/,\s*]/g, ']')     // trailing commas in arrays
+    .replace(/[\x00-\x1F\x7F]/g, (ch) => ch === '\n' || ch === '\r' || ch === '\t' ? ch : ''); // control chars
+
+  try {
+    return JSON.parse(cleaned);
+  } catch (e) {
+    // Last resort: try to extract individual objects
+    const objects: any[] = [];
+    const objRegex = /\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\}/g;
+    let match;
+    while ((match = objRegex.exec(cleaned)) !== null) {
+      try {
+        const obj = JSON.parse(match[0].replace(/,\s*}/g, '}').replace(/,\s*]/g, ']'));
+        if (obj.name && obj.address) objects.push(obj);
+      } catch { /* skip malformed objects */ }
+    }
+    if (objects.length > 0) {
+      console.warn(`Recovered ${objects.length} cafes from malformed JSON`);
+      return objects;
+    }
+    throw new Error('Could not parse JSON array after all recovery attempts');
+  }
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -119,14 +178,37 @@ Return ONLY the JSON array, no markdown fencing.`
     });
 
     const aiData = await aiResponse.json();
+    console.log('AI response status:', aiResponse.status);
+    console.log('AI response keys:', Object.keys(aiData));
+    
+    if (!aiResponse.ok) {
+      console.error('AI gateway error:', aiResponse.status, JSON.stringify(aiData).slice(0, 500));
+      return new Response(
+        JSON.stringify({ success: false, error: `AI gateway returned ${aiResponse.status}` }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     const content = aiData.choices?.[0]?.message?.content || '';
+    console.log('AI content length:', content.length);
+    console.log('AI content preview:', content.slice(0, 300));
+    console.log('AI finish_reason:', aiData.choices?.[0]?.finish_reason);
+
+    if (!content) {
+      console.error('Empty AI response. Full aiData:', JSON.stringify(aiData).slice(0, 500));
+      return new Response(
+        JSON.stringify({ success: false, error: 'Empty AI response' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
 
     let cafes;
     try {
-      const jsonMatch = content.match(/\[[\s\S]*\]/);
-      cafes = jsonMatch ? JSON.parse(jsonMatch[0]) : JSON.parse(content);
+      cafes = extractJsonArray(content);
+      console.log(`Parsed ${cafes.length} cafes from AI response`);
     } catch (parseError) {
-      console.error('Failed to parse AI response:', content.slice(0, 500));
+      console.error('Parse error:', parseError instanceof Error ? parseError.message : parseError);
+      console.error('Full AI content:', content.slice(0, 2000));
       return new Response(
         JSON.stringify({ success: false, error: 'Failed to parse cafe data' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }

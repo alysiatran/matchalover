@@ -47,7 +47,7 @@ const Explore = () => {
           <h1 className="font-display text-2xl font-bold text-foreground">Explore</h1>
           <LocationPicker location={location} onLocationChange={setLocation} variant="inline" />
         </div>
-        <SearchBar value={search} onChange={setSearch} />
+        
 
         {/* Tab bar */}
         <div className="flex rounded-xl bg-muted p-1">

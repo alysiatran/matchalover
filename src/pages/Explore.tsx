@@ -23,7 +23,8 @@ const Explore = () => {
       const key = `${e.title.toLowerCase()}|${e.venue.toLowerCase()}`;
       if (!seen.has(key)) seen.set(key, e);
     }
-    let result = Array.from(seen.values());
+    let result = Array.from(seen.values())
+      .sort((a, b) => (b.image_url ? 1 : 0) - (a.image_url ? 1 : 0));
 
     if (search) {
       const q = search.toLowerCase();

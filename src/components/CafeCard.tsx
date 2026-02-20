@@ -58,38 +58,40 @@ const CafeCard = ({ cafe, index, isSaved = false, onToggleSave, isVisited = fals
             </span>
           ))}
         </div>
-        {onToggleVisited && (
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onToggleVisited(cafe.id);
-            }}
-            className="p-1.5 rounded-full hover:bg-muted transition-colors"
-            aria-label={isVisited ? "Mark as not visited" : "Mark as visited"}
-          >
-            <CheckCircle
-              className={`w-5 h-5 transition-colors ${
-                isVisited ? "text-primary fill-primary/20" : "text-muted-foreground"
-              }`}
-            />
-          </button>
-        )}
-        {onToggleSave && (
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onToggleSave(cafe.id);
-            }}
-            className="p-1.5 rounded-full hover:bg-muted transition-colors"
-            aria-label={isSaved ? "Unsave cafe" : "Save cafe"}
-          >
-            <Heart
-              className={`w-5 h-5 transition-colors ${
-                isSaved ? "text-destructive fill-destructive" : "text-muted-foreground"
-              }`}
-            />
-          </button>
-        )}
+        <div className="flex items-center gap-1">
+          {onToggleVisited && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggleVisited(cafe.id);
+              }}
+              className="p-1.5 rounded-full hover:bg-muted transition-colors"
+              aria-label={isVisited ? "Mark as not visited" : "Mark as visited"}
+            >
+              <CheckCircle
+                className={`w-5 h-5 transition-colors ${
+                  isVisited ? "text-primary fill-primary/20" : "text-muted-foreground"
+                }`}
+              />
+            </button>
+          )}
+          {onToggleSave && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggleSave(cafe.id);
+              }}
+              className="p-1.5 rounded-full hover:bg-muted transition-colors"
+              aria-label={isSaved ? "Unsave cafe" : "Save cafe"}
+            >
+              <Heart
+                className={`w-5 h-5 transition-colors ${
+                  isSaved ? "text-destructive fill-destructive" : "text-muted-foreground"
+                }`}
+              />
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -6,9 +6,10 @@ import EventCard from "@/components/EventCard";
 import RecipeCard from "@/components/RecipeCard";
 import LocationPicker from "@/components/LocationPicker";
 import CommunityFeed from "@/components/CommunityFeed";
+import ChatRooms from "@/components/ChatRooms";
 import { recipes } from "@/data/recipes";
 
-type Tab = "events" | "recipes" | "community";
+type Tab = "events" | "recipes" | "community" | "chat";
 
 const Explore = () => {
   const [search, setSearch] = useState("");
@@ -49,7 +50,7 @@ const Explore = () => {
 
         {/* Tab bar */}
         <div className="flex rounded-xl bg-muted p-1">
-          {(["events", "recipes", "community"] as Tab[]).map((tab) => (
+          {(["events", "recipes", "community", "chat"] as Tab[]).map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -95,6 +96,8 @@ const Explore = () => {
         )}
 
         {activeTab === "community" && <CommunityFeed />}
+
+        {activeTab === "chat" && <ChatRooms />}
       </div>
     </div>
   );

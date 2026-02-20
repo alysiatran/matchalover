@@ -200,7 +200,7 @@ Return ONLY the JSON array, no markdown fencing.`
     }));
 
     // Filter out permanently closed locations
-    const closedCafes = ['matcha cafe maiko'];
+    const closedCafes = ['matcha cafe maiko', 'ghost alley espresso'];
     const filteredCafes = cafes.filter((cafe: any) =>
       !closedCafes.includes(cafe.name?.toLowerCase?.().trim())
     );

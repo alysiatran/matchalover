@@ -33,6 +33,8 @@ const Index = () => {
       "grean matcha",
       "yoka tea",
       "taz matcha",
+      "ph\u00ea",
+      "phe",
       "plus84",
       "plus 84",
       "vale matcha",

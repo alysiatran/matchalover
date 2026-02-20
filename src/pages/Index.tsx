@@ -80,7 +80,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background pb-24">
       {/* Hero */}
-      <div className="relative h-72 overflow-hidden">
+      <div className="relative h-60 overflow-hidden">
         <img
           src={heroImage}
           alt="Matcha latte"

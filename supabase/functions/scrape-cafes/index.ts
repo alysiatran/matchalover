@@ -212,14 +212,32 @@ Return ONLY the JSON array, no markdown fencing.`
 
     let savedCount = 0;
     for (const cafe of filteredCafes) {
+      // Check if cafe already exists with curated data we should preserve
+      const { data: existing } = await supabase
+        .from('cafes')
+        .select('menu, photos, photo_url, customizations, milk_options, description, tags')
+        .eq('name', cafe.name)
+        .maybeSingle();
+
+      const scrapedMenu = cafe.menu || [];
+      const scrapedPhotos = cafe.photos || [];
+      const scrapedDescription = cafe.description || '';
+      const scrapedTags = cafe.tags || [];
+
+      // Preserve existing data if it's richer than what the scraper found
+      const keepMenu = existing?.menu && Array.isArray(existing.menu) && existing.menu.length > 0 && scrapedMenu.length === 0;
+      const keepPhotos = existing?.photos && Array.isArray(existing.photos) && existing.photos.length > 0 && scrapedPhotos.length === 0;
+      const keepDescription = existing?.description && existing.description.length > (scrapedDescription.length || 0);
+      const keepTags = existing?.tags && Array.isArray(existing.tags) && existing.tags.length > (scrapedTags.length || 0);
+
       const row: Record<string, unknown> = {
         name: cafe.name,
         address: cafe.address,
         rating: cafe.rating,
         reviews: cafe.reviews,
         distance: cafe.distance,
-        tags: cafe.tags || [],
-        description: cafe.description,
+        tags: keepTags ? existing.tags : scrapedTags,
+        description: keepDescription ? existing.description : scrapedDescription,
         hours: cafe.hours,
         price_range: cafe.priceRange,
         matcha_origin: cafe.matchaPowder?.origin,
@@ -228,12 +246,27 @@ Return ONLY the JSON array, no markdown fencing.`
         matcha_body: cafe.matchaPowder?.body,
         matcha_finish: cafe.matchaPowder?.finish,
         matcha_grams: cafe.matchaPowder?.grams || null,
-        menu: cafe.menu || [],
-        photos: cafe.photos || [],
+        menu: keepMenu ? existing.menu : scrapedMenu,
+        photos: keepPhotos ? existing.photos : scrapedPhotos,
       };
 
+      // Preserve existing customizations and milk_options if scraper has none
+      if (existing?.customizations && Array.isArray(existing.customizations) && existing.customizations.length > 0) {
+        // Don't overwrite — omit from upsert so existing value is kept
+      } else {
+        row.customizations = [];
+      }
+      if (existing?.milk_options && Array.isArray(existing.milk_options) && existing.milk_options.length > 0) {
+        // Don't overwrite
+      } else {
+        row.milk_options = [];
+      }
+
       if (cafe.photoUrl) {
-        row.photo_url = cafe.photoUrl;
+        // Only update photo_url if existing doesn't have one
+        if (!existing?.photo_url) {
+          row.photo_url = cafe.photoUrl;
+        }
       }
 
       const { error: upsertError } = await supabase
@@ -244,6 +277,8 @@ Return ONLY the JSON array, no markdown fencing.`
         console.error('Upsert error for', cafe.name, upsertError);
       } else {
         savedCount++;
+        if (keepMenu) console.log(`Preserved existing menu for ${cafe.name}`);
+        if (keepPhotos) console.log(`Preserved existing photos for ${cafe.name}`);
       }
     }
 

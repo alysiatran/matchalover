@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { Leaf, ArrowLeft } from "lucide-react";
+import { Leaf, ArrowLeft, UserRound } from "lucide-react";
 
 const Auth = () => {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -154,6 +154,23 @@ const Auth = () => {
           >
             {isSignUp ? "Sign in" : "Sign up"}
           </button>
+        </p>
+
+        <div className="relative flex items-center gap-3">
+          <div className="flex-1 h-px bg-border" />
+          <span className="text-xs text-muted-foreground font-body">or</span>
+          <div className="flex-1 h-px bg-border" />
+        </div>
+
+        <button
+          onClick={() => navigate("/")}
+          className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border border-border text-sm font-body text-muted-foreground hover:bg-secondary transition-colors"
+        >
+          <UserRound className="w-4 h-4" />
+          Continue as Guest
+        </button>
+        <p className="text-center text-xs text-muted-foreground font-body -mt-2">
+          Your saves & visits will be stored locally on this device.
         </p>
       </div>
     </div>

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useVisitedCafes } from "@/hooks/useVisitedCafes";
 import { useSavedCafes } from "@/hooks/useSavedCafes";
+import { useFavoriteCafes } from "@/hooks/useFavoriteCafes";
 import { supabase } from "@/integrations/supabase/client";
 import { useState, useEffect } from "react";
 
@@ -10,6 +11,7 @@ const Profile = () => {
   const { user, profile, loading } = useAuth();
   const { visitedIds, isGuest } = useVisitedCafes();
   const { savedIds } = useSavedCafes();
+  const { favoriteIds } = useFavoriteCafes();
   const navigate = useNavigate();
   const [isAdmin, setIsAdmin] = useState(false);
 
@@ -43,7 +45,7 @@ const Profile = () => {
           <div className="grid grid-cols-3 gap-3">
             {[
               { label: "Visited", value: visitedIds.length.toString(), icon: MapPin },
-              { label: "Reviews", value: "—", icon: Star },
+              { label: "Favorites", value: favoriteIds.length.toString(), icon: Star },
               { label: "Saved", value: savedIds.length.toString(), icon: Settings },
             ].map(({ label, value, icon: Icon }) => (
               <div key={label} className="bg-card rounded-2xl p-4 border border-border text-center">
@@ -102,7 +104,7 @@ const Profile = () => {
         <div className="grid grid-cols-3 gap-3">
           {[
             { label: "Visited", value: visitedIds.length.toString(), icon: MapPin },
-            { label: "Reviews", value: "8", icon: Star },
+            { label: "Favorites", value: favoriteIds.length.toString(), icon: Star },
             { label: "Saved", value: savedIds.length.toString(), icon: Settings },
           ].map(({ label, value, icon: Icon }) => (
             <div

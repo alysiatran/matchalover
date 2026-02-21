@@ -97,10 +97,12 @@ const CafeCard = ({ cafe, index, isSaved = false, onToggleSave, isVisited = fals
             <button
               onClick={(e) => {
                 e.stopPropagation();
+                if (!isVisited) return;
                 onToggleFavorite(cafe.id);
               }}
-              className="p-1.5 rounded-full hover:bg-muted transition-colors"
+              className={`p-1.5 rounded-full transition-colors ${isVisited ? "hover:bg-muted" : "opacity-30 cursor-not-allowed"}`}
               aria-label={isFavorite ? "Unfavorite cafe" : "Favorite cafe"}
+              title={!isVisited ? "Mark as visited first to favorite" : undefined}
             >
               <StarIcon
                 className={`w-5 h-5 transition-colors ${

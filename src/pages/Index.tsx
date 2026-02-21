@@ -92,7 +92,7 @@ const Index = () => {
         <img
           src={heroImage}
           alt="Matcha latte"
-          className="w-full h-full object-cover object-[center_70%] scale-105"
+          className="w-full h-full object-cover object-[center_40%] scale-105"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-foreground/10 via-foreground/20 to-background" />
         <div className="absolute bottom-0 left-0 right-0 px-5 pb-5 flex items-end justify-between">

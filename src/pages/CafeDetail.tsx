@@ -195,9 +195,6 @@ const CafeDetail = () => {
           </div>
         )}
 
-        {/* Cafe Ambience */}
-        <CafeAmbience cafeId={cafe.id} />
-
         {/* Menu */}
         <div>
           <h2 className="font-display text-lg font-semibold text-foreground mb-3">Menu</h2>
@@ -238,6 +235,9 @@ const CafeDetail = () => {
             ))}
           </div>
         </div>
+
+        {/* Cafe Ambience */}
+        <CafeAmbience cafeId={cafe.id} />
 
       </div>
     </div>

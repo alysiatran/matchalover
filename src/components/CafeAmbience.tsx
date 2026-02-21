@@ -116,13 +116,11 @@ const CafeAmbience = ({ cafeId }: CafeAmbienceProps) => {
               <span className="text-sm font-body text-foreground">Laptop Friendly</span>
             </div>
             <span className={`text-xs font-body font-medium px-3 py-1 rounded-full ${
-              averages.total_ratings > 0 && averages.laptop_friendly_pct >= 50
+              averages.laptop_friendly_pct >= 50
                 ? "bg-primary/20 text-primary"
                 : "bg-muted text-muted-foreground"
             }`}>
-              {averages.total_ratings > 0
-                ? `${averages.laptop_friendly_pct}% say yes`
-                : "No data yet"}
+              {averages.laptop_friendly_pct >= 50 ? "Yes" : "No"}
             </span>
           </div>
         </div>

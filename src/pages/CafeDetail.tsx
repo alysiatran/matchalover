@@ -1,5 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Star, MapPin, Clock, Heart, Instagram, Leaf, ChevronLeft, ChevronRight, Milk } from "lucide-react";
+import { ArrowLeft, Star, MapPin, Clock, Heart, Instagram, Share2, Leaf, ChevronLeft, ChevronRight, Milk } from "lucide-react";
+import { toast } from "sonner";
 import { useCafes } from "@/hooks/useCafes";
 import CafeAmbience from "@/components/CafeAmbience";
 import { useSavedCafes } from "@/hooks/useSavedCafes";
@@ -91,6 +92,19 @@ const CafeDetail = () => {
               <Instagram className="w-5 h-5 text-foreground" />
             </a>
           )}
+          <button
+            onClick={() => {
+              const url = `${window.location.origin}/cafe/${cafe.id}`;
+              navigator.clipboard.writeText(url).then(() => {
+                toast.success("Link copied to clipboard!");
+              }).catch(() => {
+                toast.error("Failed to copy link");
+              });
+            }}
+            className="w-10 h-10 rounded-full bg-background/70 backdrop-blur-sm flex items-center justify-center transition-all hover:bg-background"
+          >
+            <Share2 className="w-5 h-5 text-foreground" />
+          </button>
         </div>
       </div>
 

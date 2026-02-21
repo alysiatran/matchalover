@@ -1,6 +1,7 @@
 import { Heart, CheckCircle, Info } from "lucide-react";
 import { useSavedCafes } from "@/hooks/useSavedCafes";
 import { useVisitedCafes } from "@/hooks/useVisitedCafes";
+import { useFavoriteCafes } from "@/hooks/useFavoriteCafes";
 import { useCafes } from "@/hooks/useCafes";
 import { useLocation } from "@/hooks/useLocation";
 import CafeCard from "@/components/CafeCard";
@@ -11,6 +12,7 @@ const Saved = () => {
   const navigate = useNavigate();
   const { savedIds, isSaved, toggleSave, isLoading: savedLoading, isGuest } = useSavedCafes();
   const { visitedIds, isVisited, toggleVisited } = useVisitedCafes();
+  const { isFavorite, toggleFavorite } = useFavoriteCafes();
   const { location } = useLocation();
   const { data: allCafes = [] } = useCafes(location);
 
@@ -98,10 +100,10 @@ const Saved = () => {
                     key={cafe.id}
                     cafe={cafe}
                     index={i}
-                    isSaved={isSaved(cafe.id)}
-                    onToggleSave={toggleSave}
                     isVisited={isVisited(cafe.id)}
                     onToggleVisited={toggleVisited}
+                    isFavorite={isFavorite(cafe.id)}
+                    onToggleFavorite={toggleFavorite}
                   />
                 ))}
               </div>

@@ -61,22 +61,6 @@ const CafeCard = ({ cafe, index, isSaved = false, onToggleSave, isVisited = fals
           ))}
         </div>
         <div className="flex items-center gap-1">
-          {onToggleFavorite && (
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onToggleFavorite(cafe.id);
-              }}
-              className="p-1.5 rounded-full hover:bg-muted transition-colors"
-              aria-label={isFavorite ? "Unfavorite cafe" : "Favorite cafe"}
-            >
-              <StarIcon
-                className={`w-5 h-5 transition-colors ${
-                  isFavorite ? "text-amber-500 fill-amber-500" : "text-muted-foreground"
-                }`}
-              />
-            </button>
-          )}
           {onToggleVisited && (
             <button
               onClick={(e) => {
@@ -105,6 +89,22 @@ const CafeCard = ({ cafe, index, isSaved = false, onToggleSave, isVisited = fals
               <Heart
                 className={`w-5 h-5 transition-colors ${
                   isSaved ? "text-destructive fill-destructive" : "text-muted-foreground"
+                }`}
+              />
+            </button>
+          )}
+          {onToggleFavorite && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggleFavorite(cafe.id);
+              }}
+              className="p-1.5 rounded-full hover:bg-muted transition-colors"
+              aria-label={isFavorite ? "Unfavorite cafe" : "Favorite cafe"}
+            >
+              <StarIcon
+                className={`w-5 h-5 transition-colors ${
+                  isFavorite ? "text-amber-500 fill-amber-500" : "text-muted-foreground"
                 }`}
               />
             </button>

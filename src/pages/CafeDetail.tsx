@@ -135,7 +135,7 @@ const CafeDetail = () => {
 
         {cafe.notes && (
           <div className="bg-pink-100 text-pink-900 rounded-xl p-4 border border-pink-200">
-            <p className="text-sm font-body font-semibold">📝 NOTE: {cafe.notes}</p>
+            <p className="text-sm font-body font-semibold">📝 {cafe.notes}</p>
           </div>
         )}
 

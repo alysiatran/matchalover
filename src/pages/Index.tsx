@@ -88,7 +88,7 @@ const Index = () => {
           alt="Matcha latte"
           className="w-full h-full object-cover object-[center_70%]"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-foreground/20 to-background" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background/80" />
         <div className="absolute bottom-6 left-5 right-5">
           <h1 className="font-display text-3xl font-bold text-primary-foreground drop-shadow-lg">
             Matcha Moments

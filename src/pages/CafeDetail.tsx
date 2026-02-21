@@ -235,9 +235,6 @@ const CafeDetail = () => {
           </div>
         </div>
 
-        <button className="w-full py-4 rounded-2xl bg-primary text-primary-foreground font-body font-semibold text-sm hover:opacity-90 transition-opacity active:scale-[0.98]">
-          Get Directions
-        </button>
       </div>
     </div>
   );

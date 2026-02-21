@@ -83,7 +83,7 @@ const CafeAmbience = ({ cafeId }: CafeAmbienceProps) => {
         Cafe Ambience
       </h2>
 
-      <div className="bg-card rounded-xl border border-border p-4 space-y-4">
+      <div className="bg-amber-50 dark:bg-amber-950/30 rounded-xl border border-amber-200/50 dark:border-amber-800/30 p-4 space-y-4">
         {/* Community Averages - always visible */}
         <div className="space-y-3">
           <p className="text-xs font-body text-muted-foreground uppercase tracking-wide">

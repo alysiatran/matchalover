@@ -14,6 +14,47 @@ export type Database = {
   }
   public: {
     Tables: {
+      cafe_ambience_ratings: {
+        Row: {
+          cafe_id: string
+          created_at: string
+          id: string
+          laptop_friendly: boolean
+          loudness: number
+          seating: number
+          user_id: string
+          wifi_speed: number
+        }
+        Insert: {
+          cafe_id: string
+          created_at?: string
+          id?: string
+          laptop_friendly?: boolean
+          loudness: number
+          seating: number
+          user_id: string
+          wifi_speed: number
+        }
+        Update: {
+          cafe_id?: string
+          created_at?: string
+          id?: string
+          laptop_friendly?: boolean
+          loudness?: number
+          seating?: number
+          user_id?: string
+          wifi_speed?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cafe_ambience_ratings_cafe_id_fkey"
+            columns: ["cafe_id"]
+            isOneToOne: false
+            referencedRelation: "cafes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       cafe_owners: {
         Row: {
           approved: boolean

@@ -1,12 +1,46 @@
 import { useState } from "react";
-import { Calendar, MapPin, Clock, Tag, ExternalLink } from "lucide-react";
+import { Calendar, MapPin, Clock, ExternalLink, UserCheck, Users } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { useEventRsvp } from "@/hooks/useEventRsvp";
+import { toast } from "sonner";
 import type { MatchaEvent } from "@/hooks/useEvents";
 
 interface EventCardProps {
   event: MatchaEvent;
   index: number;
 }
+
+const GoingButton = ({ eventId }: { eventId: string }) => {
+  const { count, isGoing, toggle, isLoading, user } = useEventRsvp(eventId);
+
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!user) {
+      toast.info("Sign in to RSVP to events");
+      return;
+    }
+    toggle();
+  };
+
+  return (
+    <button
+      onClick={handleClick}
+      disabled={isLoading}
+      className={`inline-flex items-center gap-1.5 text-xs font-body font-medium px-2.5 py-1 rounded-full transition-colors ${
+        isGoing
+          ? "bg-primary text-primary-foreground"
+          : "bg-muted text-muted-foreground hover:bg-muted/80"
+      }`}
+    >
+      <UserCheck className="w-3.5 h-3.5" />
+      {isGoing ? "Going" : "Going?"}
+      <span className="flex items-center gap-0.5 ml-0.5">
+        <Users className="w-3 h-3" />
+        {count}
+      </span>
+    </button>
+  );
+};
 
 const EventCard = ({ event, index }: EventCardProps) => {
   const [open, setOpen] = useState(false);
@@ -82,18 +116,21 @@ const EventCard = ({ event, index }: EventCardProps) => {
             </div>
           </div>
 
-          {event.tags.length > 0 && (
-            <div className="flex flex-wrap gap-1.5">
-              {event.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="text-[11px] font-body font-medium bg-matcha-light text-accent-foreground px-2.5 py-1 rounded-full"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          )}
+          <div className="flex items-center justify-between gap-2">
+            {event.tags.length > 0 && (
+              <div className="flex flex-wrap gap-1.5">
+                {event.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="text-[11px] font-body font-medium bg-matcha-light text-accent-foreground px-2.5 py-1 rounded-full"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
+            <GoingButton eventId={event.id} />
+          </div>
         </div>
       </div>
 
@@ -121,6 +158,10 @@ const EventCard = ({ event, index }: EventCardProps) => {
                 )}
               </div>
             </DialogHeader>
+
+            <div className="flex items-center">
+              <GoingButton eventId={event.id} />
+            </div>
 
             {event.description && (
               <p className="text-sm font-body text-muted-foreground leading-relaxed">

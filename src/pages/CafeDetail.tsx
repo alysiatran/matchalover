@@ -133,6 +133,12 @@ const CafeDetail = () => {
           </div>
         </div>
 
+        {cafe.id === "c7412b11-86a7-4440-974d-342141f1bac6" && (
+          <div className="bg-pink-100 text-pink-900 rounded-xl p-4 border border-pink-200">
+            <p className="text-sm font-body font-semibold">📝 NOTE: We will be offering sencha tea from Japan, stay tuned!</p>
+          </div>
+        )}
+
         <div>
           <h2 className="font-display text-lg font-semibold text-foreground mb-2">About</h2>
           <p className="text-sm leading-relaxed text-muted-foreground font-body">{cafe.description}</p>

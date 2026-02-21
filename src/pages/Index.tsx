@@ -70,6 +70,12 @@ const Index = () => {
         c.tags.some((t) => t.toLowerCase().includes("hojicha")) ||
         c.menu.some((cat) => cat.items.some((item) => item.name.toLowerCase().includes("hojicha")))
       );
+    } else if (activeCategory === "Matcha Powder Sold") {
+      result = result.filter((c) =>
+        c.tags.some((t) => t.toLowerCase().includes("matcha powder sold")) ||
+        c.tags.some((t) => t.toLowerCase().includes("retail")) ||
+        c.description.toLowerCase().includes("matcha powder sold")
+      );
     } else if (activeCategory === "Soft Opening") {
       result = result.filter((c) =>
         c.tags.some((t) => t.toLowerCase().includes("soft opening")) ||

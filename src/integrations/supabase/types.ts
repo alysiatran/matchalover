@@ -106,6 +106,7 @@ export type Database = {
           menu: Json | null
           milk_options: Json | null
           name: string
+          notes: string | null
           photo_url: string | null
           photos: string[] | null
           price_range: string | null
@@ -132,6 +133,7 @@ export type Database = {
           menu?: Json | null
           milk_options?: Json | null
           name: string
+          notes?: string | null
           photo_url?: string | null
           photos?: string[] | null
           price_range?: string | null
@@ -158,6 +160,7 @@ export type Database = {
           menu?: Json | null
           milk_options?: Json | null
           name?: string
+          notes?: string | null
           photo_url?: string | null
           photos?: string[] | null
           price_range?: string | null

@@ -88,11 +88,11 @@ const CafeAmbience = ({ cafeId }: CafeAmbienceProps) => {
         <div className="space-y-3">
           <p className="text-xs font-body text-muted-foreground uppercase tracking-wide">
             Community Average
-            {averages.total_ratings > 0 && (
-              <span className="normal-case tracking-normal ml-1">
-                · {averages.total_ratings} rating{averages.total_ratings !== 1 ? "s" : ""}
-              </span>
-            )}
+            <span className="normal-case tracking-normal ml-1">
+              · {averages.total_ratings > 0
+                ? `${averages.total_ratings} rating${averages.total_ratings !== 1 ? "s" : ""}`
+                : "Estimated"}
+            </span>
           </p>
           {items.map(({ key, icon: Icon, label }) => (
             <div key={key} className="flex items-center justify-between">

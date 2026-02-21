@@ -3,6 +3,7 @@ import { categories } from "@/data/cafes";
 import { useCafes } from "@/hooks/useCafes";
 import { useSavedCafes } from "@/hooks/useSavedCafes";
 import { useVisitedCafes } from "@/hooks/useVisitedCafes";
+import { useFavoriteCafes } from "@/hooks/useFavoriteCafes";
 import { useLocation } from "@/hooks/useLocation";
 import SearchBar from "@/components/SearchBar";
 import CategoryChips from "@/components/CategoryChips";
@@ -17,6 +18,7 @@ const Index = () => {
   const { data: cafes = [] } = useCafes(location);
   const { isSaved, toggleSave } = useSavedCafes();
   const { isVisited, toggleVisited } = useVisitedCafes();
+  const { isFavorite, toggleFavorite } = useFavoriteCafes();
 
   const filtered = useMemo(() => {
     // Deduplicate by name (keep highest rated)
@@ -110,7 +112,7 @@ const Index = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {filtered.map((cafe, i) => (
-            <CafeCard key={cafe.id} cafe={cafe} index={i} isSaved={isSaved(cafe.id)} onToggleSave={toggleSave} isVisited={isVisited(cafe.id)} onToggleVisited={toggleVisited} />
+            <CafeCard key={cafe.id} cafe={cafe} index={i} isSaved={isSaved(cafe.id)} onToggleSave={toggleSave} isVisited={isVisited(cafe.id)} onToggleVisited={toggleVisited} isFavorite={isFavorite(cafe.id)} onToggleFavorite={toggleFavorite} />
           ))}
         </div>
 

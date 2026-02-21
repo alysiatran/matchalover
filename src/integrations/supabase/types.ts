@@ -271,6 +271,35 @@ export type Database = {
         }
         Relationships: []
       }
+      favorite_cafes: {
+        Row: {
+          cafe_id: string
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          cafe_id: string
+          created_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          cafe_id?: string
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "favorite_cafes_cafe_id_fkey"
+            columns: ["cafe_id"]
+            isOneToOne: false
+            referencedRelation: "cafes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       matcha_events: {
         Row: {
           address: string | null

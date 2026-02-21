@@ -33,6 +33,7 @@ interface DbCafe {
   customizations: any[] | null;
   photo_url: string | null;
   photos: string[] | null;
+  instagram: string | null;
   created_at: string;
 }
 
@@ -69,6 +70,7 @@ function mapDbCafe(row: DbCafe, index: number): Cafe {
     menu: row.menu || [],
     milkOptions: row.milk_options || [],
     customizations: row.customizations || [],
+    instagram: row.instagram || undefined,
   };
 }
 

@@ -123,7 +123,7 @@ const CafeDetail = () => {
             <Leaf className="w-5 h-5 text-primary" />
             Matcha Profile
           </h2>
-          <div className="bg-card rounded-xl border border-border p-4 space-y-3">
+          <div className="bg-primary/10 rounded-xl border border-primary/20 p-4 space-y-3">
             <div className="flex justify-between items-center">
               <span className="text-xs font-body text-muted-foreground uppercase tracking-wide">Origin</span>
               <span className="text-sm font-body font-medium text-foreground">{cafe.matchaPowder.origin}</span>

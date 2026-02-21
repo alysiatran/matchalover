@@ -1,11 +1,9 @@
 import { useState, useMemo } from "react";
-import { Sparkles } from "lucide-react";
 import { categories } from "@/data/cafes";
 import { useCafes } from "@/hooks/useCafes";
 import { useSavedCafes } from "@/hooks/useSavedCafes";
 import { useVisitedCafes } from "@/hooks/useVisitedCafes";
 import { useFavoriteCafes } from "@/hooks/useFavoriteCafes";
-import { useRecommendedCafes } from "@/hooks/useRecommendedCafes";
 import { useLocation } from "@/hooks/useLocation";
 import SearchBar from "@/components/SearchBar";
 import CategoryChips from "@/components/CategoryChips";
@@ -20,8 +18,7 @@ const Index = () => {
   const { data: cafes = [] } = useCafes(location);
   const { isSaved, toggleSave } = useSavedCafes();
   const { isVisited, toggleVisited } = useVisitedCafes();
-  const { favoriteIds, isFavorite, toggleFavorite } = useFavoriteCafes();
-  const recommended = useRecommendedCafes(cafes, favoriteIds);
+  const { isFavorite, toggleFavorite } = useFavoriteCafes();
 
   const filtered = useMemo(() => {
     // Deduplicate by name (keep highest rated)
@@ -112,24 +109,6 @@ const Index = () => {
           active={activeCategory}
           onSelect={setActiveCategory}
         />
-
-        {/* Recommendations */}
-        {recommended.length > 0 && !search && activeCategory === "All" && (
-          <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <Sparkles className="w-4.5 h-4.5 text-primary" />
-              <h2 className="font-display text-lg font-semibold text-foreground">For You</h2>
-            </div>
-            <p className="text-xs text-muted-foreground font-body -mt-1">Based on your favorites</p>
-            <div className="flex gap-3 overflow-x-auto pb-2 -mx-5 px-5 snap-x">
-              {recommended.map((cafe, i) => (
-                <div key={cafe.id} className="min-w-[260px] snap-start">
-                  <CafeCard cafe={cafe} index={i} isSaved={isSaved(cafe.id)} onToggleSave={toggleSave} isVisited={isVisited(cafe.id)} onToggleVisited={toggleVisited} isFavorite={isFavorite(cafe.id)} onToggleFavorite={toggleFavorite} />
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {filtered.map((cafe, i) => (

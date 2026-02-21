@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Star, MapPin, Clock, Heart, Share2, Leaf, ChevronLeft, ChevronRight, Milk } from "lucide-react";
 import { useCafes } from "@/hooks/useCafes";
+import CafeAmbience from "@/components/CafeAmbience";
 import { useSavedCafes } from "@/hooks/useSavedCafes";
 import { useState } from "react";
 import cafe1 from "@/assets/cafe-1.jpg";
@@ -193,6 +194,9 @@ const CafeDetail = () => {
             </div>
           </div>
         )}
+
+        {/* Cafe Ambience */}
+        <CafeAmbience cafeId={cafe.id} />
 
         {/* Menu */}
         <div>

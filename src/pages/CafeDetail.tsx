@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Star, MapPin, Clock, Heart, Share2, Leaf, ChevronLeft, ChevronRight, Milk } from "lucide-react";
+import { ArrowLeft, Star, MapPin, Clock, Heart, Instagram, Leaf, ChevronLeft, ChevronRight, Milk } from "lucide-react";
 import { useCafes } from "@/hooks/useCafes";
 import CafeAmbience from "@/components/CafeAmbience";
 import { useSavedCafes } from "@/hooks/useSavedCafes";
@@ -81,9 +81,16 @@ const CafeDetail = () => {
               className={`w-5 h-5 transition-colors ${liked ? "text-destructive fill-destructive" : "text-foreground"}`}
             />
           </button>
-          <button className="w-10 h-10 rounded-full bg-background/70 backdrop-blur-sm flex items-center justify-center transition-all hover:bg-background">
-            <Share2 className="w-5 h-5 text-foreground" />
-          </button>
+          {cafe.instagram && (
+            <a
+              href={cafe.instagram}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-10 h-10 rounded-full bg-background/70 backdrop-blur-sm flex items-center justify-center transition-all hover:bg-background"
+            >
+              <Instagram className="w-5 h-5 text-foreground" />
+            </a>
+          )}
         </div>
       </div>
 

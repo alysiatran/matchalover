@@ -58,6 +58,7 @@ export interface Cafe {
   menu: MenuCategory[];
   milkOptions?: MilkOption[];
   customizations?: CustomizationSection[];
+  instagram?: string;
 }
 
 export const cafes: Cafe[] = [

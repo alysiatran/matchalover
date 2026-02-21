@@ -96,6 +96,7 @@ export type Database = {
           distance: string | null
           hours: string | null
           id: string
+          instagram: string | null
           matcha_body: string | null
           matcha_finish: string | null
           matcha_flavor_notes: string[] | null
@@ -121,6 +122,7 @@ export type Database = {
           distance?: string | null
           hours?: string | null
           id?: string
+          instagram?: string | null
           matcha_body?: string | null
           matcha_finish?: string | null
           matcha_flavor_notes?: string[] | null
@@ -146,6 +148,7 @@ export type Database = {
           distance?: string | null
           hours?: string | null
           id?: string
+          instagram?: string | null
           matcha_body?: string | null
           matcha_finish?: string | null
           matcha_flavor_notes?: string[] | null

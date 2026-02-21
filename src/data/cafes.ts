@@ -59,6 +59,7 @@ export interface Cafe {
   milkOptions?: MilkOption[];
   customizations?: CustomizationSection[];
   instagram?: string;
+  notes?: string;
 }
 
 export const cafes: Cafe[] = [

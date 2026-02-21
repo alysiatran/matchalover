@@ -1,0 +1,1 @@
+ALTER TABLE public.cafes ADD COLUMN notes TEXT DEFAULT NULL;

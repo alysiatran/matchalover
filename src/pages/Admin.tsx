@@ -15,7 +15,9 @@ import {
   Hash,
   Plus,
   Trash2,
+  StickyNote,
 } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Table,
   TableBody,
@@ -272,8 +274,139 @@ const Admin = () => {
           )}
         </div>
 
+        {/* Cafe Notes Management */}
+        <CafeNotesAdmin />
+
         {/* Chat Channels Management */}
         <ChatChannelsAdmin />
+      </div>
+    </div>
+  );
+};
+
+const CafeNotesAdmin = () => {
+  const [allCafes, setAllCafes] = useState<{ id: string; name: string; notes: string | null }[]>([]);
+  const [selectedCafeId, setSelectedCafeId] = useState("");
+  const [noteText, setNoteText] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [loadingCafes, setLoadingCafes] = useState(true);
+
+  useEffect(() => {
+    loadCafes();
+  }, []);
+
+  async function loadCafes() {
+    setLoadingCafes(true);
+    const { data } = await supabase.from("cafes").select("id, name, notes").order("name");
+    if (data) setAllCafes(data);
+    setLoadingCafes(false);
+  }
+
+  function handleSelectCafe(cafeId: string) {
+    setSelectedCafeId(cafeId);
+    const cafe = allCafes.find((c) => c.id === cafeId);
+    setNoteText(cafe?.notes || "");
+  }
+
+  async function handleSaveNote() {
+    if (!selectedCafeId) return;
+    setSaving(true);
+    const { error } = await supabase
+      .from("cafes")
+      .update({ notes: noteText.trim() || null })
+      .eq("id", selectedCafeId);
+    setSaving(false);
+    if (error) {
+      toast.error("Failed to save note: " + error.message);
+    } else {
+      toast.success("Note saved!");
+      setAllCafes((prev) =>
+        prev.map((c) => (c.id === selectedCafeId ? { ...c, notes: noteText.trim() || null } : c))
+      );
+    }
+  }
+
+  async function handleClearNote() {
+    if (!selectedCafeId) return;
+    setSaving(true);
+    const { error } = await supabase
+      .from("cafes")
+      .update({ notes: null })
+      .eq("id", selectedCafeId);
+    setSaving(false);
+    if (error) {
+      toast.error("Failed to clear note: " + error.message);
+    } else {
+      toast.success("Note cleared!");
+      setNoteText("");
+      setAllCafes((prev) =>
+        prev.map((c) => (c.id === selectedCafeId ? { ...c, notes: null } : c))
+      );
+    }
+  }
+
+  const selectedCafe = allCafes.find((c) => c.id === selectedCafeId);
+
+  return (
+    <div className="space-y-3">
+      <h2 className="font-display text-lg font-semibold text-foreground flex items-center gap-2">
+        <StickyNote className="w-5 h-5 text-primary" /> Cafe Notes
+      </h2>
+
+      <div className="bg-card rounded-2xl p-4 border border-border space-y-3">
+        {loadingCafes ? (
+          <div className="flex justify-center py-4">
+            <Loader2 className="w-5 h-5 animate-spin text-primary" />
+          </div>
+        ) : (
+          <>
+            <select
+              value={selectedCafeId}
+              onChange={(e) => handleSelectCafe(e.target.value)}
+              className="w-full rounded-xl border border-border bg-background px-3 py-2.5 text-sm font-body"
+            >
+              <option value="">Select a cafe…</option>
+              {allCafes.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name} {c.notes ? "📝" : ""}
+                </option>
+              ))}
+            </select>
+
+            {selectedCafeId && (
+              <>
+                <Textarea
+                  value={noteText}
+                  onChange={(e) => setNoteText(e.target.value)}
+                  placeholder="Add a note that will appear on the cafe's page (e.g. announcements, special offers)…"
+                  className="rounded-xl font-body text-sm"
+                  rows={3}
+                />
+                <div className="flex gap-2">
+                  <Button
+                    size="sm"
+                    onClick={handleSaveNote}
+                    disabled={saving}
+                    className="rounded-xl font-body flex-1"
+                  >
+                    {saving ? "Saving…" : "Save Note"}
+                  </Button>
+                  {selectedCafe?.notes && (
+                    <Button
+                      size="sm"
+                      variant="destructive"
+                      onClick={handleClearNote}
+                      disabled={saving}
+                      className="rounded-xl font-body"
+                    >
+                      <Trash2 className="w-4 h-4 mr-1" /> Clear
+                    </Button>
+                  )}
+                </div>
+              </>
+            )}
+          </>
+        )}
       </div>
     </div>
   );

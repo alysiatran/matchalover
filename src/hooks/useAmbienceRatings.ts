@@ -40,7 +40,8 @@ export function useAmbienceRatings(cafeId: string) {
         .eq("cafe_id", cafeId);
       if (error) throw error;
       if (!data || data.length === 0) {
-        return { seating: 0, loudness: 0, wifi_speed: 0, laptop_friendly_pct: 0, total_ratings: 0 };
+        // Placeholder data until real ratings come in
+        return { seating: 3, loudness: 2, wifi_speed: 4, laptop_friendly_pct: 72, total_ratings: 0 };
       }
       const n = data.length;
       return {

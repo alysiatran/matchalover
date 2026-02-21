@@ -1,4 +1,4 @@
-import { Star, MapPin, Heart, CheckCircle } from "lucide-react";
+import { Star, MapPin, Heart, CheckCircle, StarIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import type { Cafe } from "@/data/cafes";
 import cafe1 from "@/assets/cafe-1.jpg";
@@ -12,9 +12,11 @@ interface CafeCardProps {
   onToggleSave?: (cafeId: string) => void;
   isVisited?: boolean;
   onToggleVisited?: (cafeId: string) => void;
+  isFavorite?: boolean;
+  onToggleFavorite?: (cafeId: string) => void;
 }
 
-const CafeCard = ({ cafe, index, isSaved = false, onToggleSave, isVisited = false, onToggleVisited }: CafeCardProps) => {
+const CafeCard = ({ cafe, index, isSaved = false, onToggleSave, isVisited = false, onToggleVisited, isFavorite = false, onToggleFavorite }: CafeCardProps) => {
   const navigate = useNavigate();
 
   return (
@@ -59,6 +61,22 @@ const CafeCard = ({ cafe, index, isSaved = false, onToggleSave, isVisited = fals
           ))}
         </div>
         <div className="flex items-center gap-1">
+          {onToggleFavorite && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggleFavorite(cafe.id);
+              }}
+              className="p-1.5 rounded-full hover:bg-muted transition-colors"
+              aria-label={isFavorite ? "Unfavorite cafe" : "Favorite cafe"}
+            >
+              <StarIcon
+                className={`w-5 h-5 transition-colors ${
+                  isFavorite ? "text-amber-500 fill-amber-500" : "text-muted-foreground"
+                }`}
+              />
+            </button>
+          )}
           {onToggleVisited && (
             <button
               onClick={(e) => {

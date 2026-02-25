@@ -1,3 +1,5 @@
+Matcha Moments - A place for matcha lovers to unite and find their new favorite cafe and community
+
 # Welcome to your Lovable project
 
 ## Project info

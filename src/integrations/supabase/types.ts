@@ -87,6 +87,47 @@ export type Database = {
           },
         ]
       }
+      cafe_reviews: {
+        Row: {
+          cafe_id: string
+          content: string | null
+          created_at: string
+          id: string
+          photos: string[] | null
+          rating: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          cafe_id: string
+          content?: string | null
+          created_at?: string
+          id?: string
+          photos?: string[] | null
+          rating: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          cafe_id?: string
+          content?: string | null
+          created_at?: string
+          id?: string
+          photos?: string[] | null
+          rating?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cafe_reviews_cafe_id_fkey"
+            columns: ["cafe_id"]
+            isOneToOne: false
+            referencedRelation: "cafes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       cafes: {
         Row: {
           address: string

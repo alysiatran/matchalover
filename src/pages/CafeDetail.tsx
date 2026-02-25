@@ -3,6 +3,7 @@ import { ArrowLeft, Star, MapPin, Clock, Heart, Instagram, Share2, Leaf, Chevron
 import { toast } from "sonner";
 import { useCafes } from "@/hooks/useCafes";
 import CafeAmbience from "@/components/CafeAmbience";
+import CafeReviews from "@/components/CafeReviews";
 import { useSavedCafes } from "@/hooks/useSavedCafes";
 import { useState } from "react";
 import cafe1 from "@/assets/cafe-1.jpg";
@@ -262,6 +263,9 @@ const CafeDetail = () => {
             ))}
           </div>
         </div>
+
+        {/* Reviews */}
+        <CafeReviews cafeId={cafe.id} />
 
         {/* Cafe Ambience */}
         <CafeAmbience cafeId={cafe.id} />

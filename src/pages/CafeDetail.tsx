@@ -264,11 +264,11 @@ const CafeDetail = () => {
           </div>
         </div>
 
-        {/* Reviews */}
-        <CafeReviews cafeId={cafe.id} />
-
         {/* Cafe Ambience */}
         <CafeAmbience cafeId={cafe.id} />
+
+        {/* Reviews */}
+        <CafeReviews cafeId={cafe.id} />
 
       </div>
     </div>

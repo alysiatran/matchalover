@@ -18,16 +18,35 @@ export interface ChatMessage {
   author_name?: string;
 }
 
+export interface ChatRoomWithCount extends ChatRoom {
+  member_count: number;
+}
+
 export function useChatRooms() {
   return useQuery({
     queryKey: ["chat-rooms"],
-    queryFn: async (): Promise<ChatRoom[]> => {
-      const { data, error } = await supabase
+    queryFn: async (): Promise<ChatRoomWithCount[]> => {
+      const { data: rooms, error } = await supabase
         .from("chat_rooms")
         .select("*")
         .order("created_at", { ascending: true });
       if (error) throw error;
-      return data || [];
+
+      // Get distinct user counts per room
+      const { data: messages } = await supabase
+        .from("chat_messages")
+        .select("room_id, user_id");
+
+      const roomUserMap = new Map<string, Set<string>>();
+      for (const msg of messages || []) {
+        if (!roomUserMap.has(msg.room_id)) roomUserMap.set(msg.room_id, new Set());
+        roomUserMap.get(msg.room_id)!.add(msg.user_id);
+      }
+
+      return (rooms || []).map((r) => ({
+        ...r,
+        member_count: roomUserMap.get(r.id)?.size || 0,
+      }));
     },
   });
 }

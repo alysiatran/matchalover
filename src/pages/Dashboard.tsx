@@ -17,7 +17,9 @@ import {
   Trash2,
   CalendarPlus,
   Loader2,
+  Camera,
 } from "lucide-react";
+import { supabase as sb } from "@/integrations/supabase/client";
 import type { Cafe } from "@/data/cafes";
 
 interface OwnedCafe {
@@ -32,6 +34,7 @@ const Dashboard = () => {
   const [cafes, setCafes] = useState<any[]>([]);
   const [selectedCafe, setSelectedCafe] = useState<any | null>(null);
   const [saving, setSaving] = useState(false);
+  const [scanning, setScanning] = useState(false);
   const [claimCafeId, setClaimCafeId] = useState("");
   const [allCafes, setAllCafes] = useState<{ id: string; name: string }[]>([]);
 
@@ -338,7 +341,47 @@ const Dashboard = () => {
 
               {/* Menu Editor */}
               <div className="space-y-3">
-                <h3 className="font-display text-sm font-semibold text-foreground">Menu</h3>
+                <div className="flex items-center justify-between">
+                  <h3 className="font-display text-sm font-semibold text-foreground">Menu</h3>
+                  <label className="flex items-center gap-1.5 text-xs text-primary font-body cursor-pointer hover:opacity-80 transition-opacity">
+                    <Camera className="w-4 h-4" />
+                    {scanning ? "Scanning…" : "Scan menu photo"}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      capture="environment"
+                      className="hidden"
+                      disabled={scanning}
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        setScanning(true);
+                        try {
+                          const reader = new FileReader();
+                          const base64 = await new Promise<string>((resolve) => {
+                            reader.onload = () => resolve(reader.result as string);
+                            reader.readAsDataURL(file);
+                          });
+                          const { data, error } = await sb.functions.invoke("scan-menu", {
+                            body: { imageBase64: base64 },
+                          });
+                          if (error) throw error;
+                          if (data?.menu) {
+                            setSelectedCafe({ ...selectedCafe, menu: data.menu });
+                            toast.success(`Extracted ${data.menu.length} menu categories!`);
+                          } else if (data?.error) {
+                            toast.error(data.error);
+                          }
+                        } catch (err: any) {
+                          toast.error(err.message || "Failed to scan menu");
+                        } finally {
+                          setScanning(false);
+                          e.target.value = "";
+                        }
+                      }}
+                    />
+                  </label>
+                </div>
                 {(selectedCafe.menu || []).map((category: any, ci: number) => (
                   <div key={ci} className="bg-card rounded-xl p-3 border border-border space-y-2">
                     <Input

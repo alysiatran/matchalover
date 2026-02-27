@@ -7,6 +7,7 @@ export interface AmbienceRating {
   loudness: number;
   wifi_speed: number;
   laptop_friendly: boolean;
+  outlets_available: boolean;
 }
 
 export interface AmbienceAverages {
@@ -14,6 +15,7 @@ export interface AmbienceAverages {
   loudness: number;
   wifi_speed: number;
   laptop_friendly_pct: number;
+  outlets_available_pct: number;
   total_ratings: number;
 }
 
@@ -36,12 +38,11 @@ export function useAmbienceRatings(cafeId: string) {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("cafe_ambience_ratings")
-        .select("seating, loudness, wifi_speed, laptop_friendly")
+        .select("seating, loudness, wifi_speed, laptop_friendly, outlets_available")
         .eq("cafe_id", cafeId);
       if (error) throw error;
       if (!data || data.length === 0) {
-        // Placeholder data until real ratings come in
-        return { seating: 3, loudness: 2, wifi_speed: 4, laptop_friendly_pct: 72, total_ratings: 0 };
+        return { seating: 3, loudness: 2, wifi_speed: 4, laptop_friendly_pct: 72, outlets_available_pct: 50, total_ratings: 0 };
       }
       const n = data.length;
       return {
@@ -49,6 +50,7 @@ export function useAmbienceRatings(cafeId: string) {
         loudness: Math.round((data.reduce((s, r) => s + r.loudness, 0) / n) * 10) / 10,
         wifi_speed: Math.round((data.reduce((s, r) => s + r.wifi_speed, 0) / n) * 10) / 10,
         laptop_friendly_pct: Math.round((data.filter((r) => r.laptop_friendly).length / n) * 100),
+        outlets_available_pct: Math.round((data.filter((r) => r.outlets_available).length / n) * 100),
         total_ratings: n,
       };
     },
@@ -60,7 +62,7 @@ export function useAmbienceRatings(cafeId: string) {
       if (!userId) return null;
       const { data, error } = await supabase
         .from("cafe_ambience_ratings")
-        .select("seating, loudness, wifi_speed, laptop_friendly")
+        .select("seating, loudness, wifi_speed, laptop_friendly, outlets_available")
         .eq("cafe_id", cafeId)
         .eq("user_id", userId)
         .maybeSingle();
@@ -88,7 +90,7 @@ export function useAmbienceRatings(cafeId: string) {
   });
 
   return {
-    averages: averages ?? { seating: 0, loudness: 0, wifi_speed: 0, laptop_friendly_pct: 0, total_ratings: 0 },
+    averages: averages ?? { seating: 0, loudness: 0, wifi_speed: 0, laptop_friendly_pct: 0, outlets_available_pct: 0, total_ratings: 0 },
     userRating,
     submitRating: submitRating.mutate,
     isSubmitting: submitRating.isPending,

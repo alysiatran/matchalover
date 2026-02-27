@@ -1,0 +1,1 @@
+ALTER TABLE public.cafe_ambience_ratings ADD COLUMN outlets_available boolean NOT NULL DEFAULT false;

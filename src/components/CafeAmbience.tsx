@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Armchair, Volume2, Wifi, Laptop, ChevronDown, ChevronUp } from "lucide-react";
+import { Armchair, Volume2, Wifi, Laptop, Plug, ChevronDown, ChevronUp } from "lucide-react";
 import { useAmbienceRatings, AmbienceRating } from "@/hooks/useAmbienceRatings";
 import { toast } from "@/hooks/use-toast";
 
@@ -50,6 +50,7 @@ const CafeAmbience = ({ cafeId }: CafeAmbienceProps) => {
     loudness: 3,
     wifi_speed: 3,
     laptop_friendly: true,
+    outlets_available: true,
   });
 
   useEffect(() => {
@@ -123,6 +124,19 @@ const CafeAmbience = ({ cafeId }: CafeAmbienceProps) => {
               {averages.laptop_friendly_pct >= 50 ? "Yes" : "No"}
             </span>
           </div>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Plug className="w-4 h-4 text-muted-foreground" />
+              <span className="text-sm font-body text-foreground">Outlets Available</span>
+            </div>
+            <span className={`text-xs font-body font-medium px-3 py-1 rounded-full ${
+              averages.outlets_available_pct >= 50
+                ? "bg-primary/20 text-primary"
+                : "bg-muted text-muted-foreground"
+            }`}>
+              {averages.outlets_available_pct >= 50 ? "Yes" : "No"}
+            </span>
+          </div>
         </div>
 
         {/* Your Rating - expandable */}
@@ -182,6 +196,22 @@ const CafeAmbience = ({ cafeId }: CafeAmbienceProps) => {
                   }`}
                 >
                   {draft.laptop_friendly ? "Yes" : "No"}
+                </button>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Plug className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-sm font-body text-foreground">Outlets Available</span>
+                </div>
+                <button
+                  onClick={() => setDraft((d) => ({ ...d, outlets_available: !d.outlets_available }))}
+                  className={`text-xs font-body font-medium px-3 py-1 rounded-full transition-colors ${
+                    draft.outlets_available
+                      ? "bg-amber-500/20 text-amber-600"
+                      : "bg-muted text-muted-foreground"
+                  }`}
+                >
+                  {draft.outlets_available ? "Yes" : "No"}
                 </button>
               </div>
               <div className="flex justify-end gap-2 pt-1">

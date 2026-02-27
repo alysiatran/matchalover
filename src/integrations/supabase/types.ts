@@ -21,6 +21,7 @@ export type Database = {
           id: string
           laptop_friendly: boolean
           loudness: number
+          outlets_available: boolean
           seating: number
           user_id: string
           wifi_speed: number
@@ -31,6 +32,7 @@ export type Database = {
           id?: string
           laptop_friendly?: boolean
           loudness: number
+          outlets_available?: boolean
           seating: number
           user_id: string
           wifi_speed: number
@@ -41,6 +43,7 @@ export type Database = {
           id?: string
           laptop_friendly?: boolean
           loudness?: number
+          outlets_available?: boolean
           seating?: number
           user_id?: string
           wifi_speed?: number

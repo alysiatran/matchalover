@@ -143,7 +143,7 @@ const Profile = () => {
           >
             Edit Profile
           </button>
-          {["Notifications", "Preferences", "Help & Support"].map((item) => (
+          {["Help & Support"].map((item) => (
             <button
               key={item}
               className="w-full text-left px-4 py-3.5 rounded-xl bg-card border border-border font-body text-sm text-foreground hover:bg-secondary transition-colors"

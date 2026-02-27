@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
-import { Hash, ArrowLeft, Send, User } from "lucide-react";
+import { Hash, ArrowLeft, Send, User, Users } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
-import { useChatRooms, useChatMessages, sendChatMessage, type ChatRoom } from "@/hooks/useChat";
+import { useChatRooms, useChatMessages, sendChatMessage, type ChatRoom, type ChatRoomWithCount } from "@/hooks/useChat";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -41,9 +41,17 @@ const RoomList = ({ onSelect }: { onSelect: (room: ChatRoom) => void }) => {
           </div>
           <div className="min-w-0">
             <h3 className="font-display text-sm font-semibold text-foreground">{room.name}</h3>
-            {room.description && (
-              <p className="text-xs font-body text-muted-foreground truncate">{room.description}</p>
-            )}
+            <div className="flex items-center gap-2">
+              {room.description && (
+                <p className="text-xs font-body text-muted-foreground truncate">{room.description}</p>
+              )}
+              {room.member_count > 0 && (
+                <span className="inline-flex items-center gap-1 text-[10px] font-body text-muted-foreground shrink-0">
+                  <Users className="w-3 h-3" />
+                  {room.member_count}
+                </span>
+              )}
+            </div>
           </div>
         </button>
       ))}
